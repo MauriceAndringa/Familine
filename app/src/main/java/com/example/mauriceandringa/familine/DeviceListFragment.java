@@ -36,8 +36,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.mauriceandringa.familine.R;
-
 /**
  * A ListFragment that displays available peers on discovery and requests the
  * parent activity to handle user interaction events

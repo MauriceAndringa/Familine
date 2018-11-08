@@ -36,7 +36,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.mauriceandringa.familine.R;
 import com.example.mauriceandringa.familine.DeviceListFragment.DeviceActionListener;
 
 /**
@@ -70,15 +69,14 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Dev
         setContentView(R.layout.main);
 
         // add necessary intent values to be matched.
+
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        if (null != manager) {
-            channel = manager.initialize(this, getMainLooper(), null);
-        }
+        channel = manager.initialize(this, getMainLooper(), null);
     }
 
     /** register the BroadcastReceiver with the intent values to be matched */
@@ -263,5 +261,6 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Dev
                 });
             }
         }
+
     }
 }
