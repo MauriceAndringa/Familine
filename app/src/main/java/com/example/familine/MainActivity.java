@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initViews();
         initVideos();
         getIceServers();
+        setSpeakerPhoneOn();
         SignallingClient.getInstance().init(this);
 
         start();
@@ -183,6 +184,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void setSpeakerPhoneOn() {
+        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        audioManager.setSpeakerphoneOn(true);
+    }
 
     public void start() {
         //Initialize PeerConnectionFactory globals.
