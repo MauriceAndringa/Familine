@@ -1,7 +1,13 @@
 package com.example.familine;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -30,7 +36,6 @@ import org.webrtc.PeerConnectionFactory;
 import org.webrtc.SessionDescription;
 import org.webrtc.SurfaceViewRenderer;
 import org.webrtc.VideoCapturer;
-import org.webrtc.VideoRenderer;
 import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 
@@ -64,18 +69,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     List<PeerConnection.IceServer> peerIceServers = new ArrayList<>();
 
     private static final String TAG = "MainActivity";
+    private static final int PERMISSIONS_REQUEST_CAMERA = 1;
+    private static final int PERMISSIONS_REQUEST_MODIFY_AUDIO_SETTINGS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        grantAppPermissions();
         initViews();
         initVideos();
         getIceServers();
         SignallingClient.getInstance().init(this);
 
         start();
+    }
+
+    private void grantAppPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                new String[]{ Manifest.permission.CAMERA },
+                PERMISSIONS_REQUEST_CAMERA
+            );
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.MODIFY_AUDIO_SETTINGS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{ Manifest.permission.MODIFY_AUDIO_SETTINGS },
+                    PERMISSIONS_REQUEST_MODIFY_AUDIO_SETTINGS
+            );
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_CAMERA: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay!
+                } else {
+                    // permission denied, boo!
+                }
+                return;
+            }
+            case PERMISSIONS_REQUEST_MODIFY_AUDIO_SETTINGS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay!
+                } else {
+                    // permission denied, boo!
+                }
+                return;
+            }
+        }
     }
 
     private void initViews() {
@@ -147,11 +199,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DefaultVideoDecoderFactory defaultVideoDecoderFactory = new DefaultVideoDecoderFactory(rootEglBase.getEglBaseContext());
         peerConnectionFactory = new PeerConnectionFactory(options, defaultVideoEncoderFactory, defaultVideoDecoderFactory);
 
-
         //Now create a VideoCapturer instance.
         VideoCapturer videoCapturerAndroid;
         videoCapturerAndroid = createCameraCapturer(new Camera1Enumerator(false));
-
 
         //Create MediaConstraints - Will be useful for specifying video and audio constraints.
         audioConstraints = new MediaConstraints();
@@ -166,7 +216,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //create an AudioSource instance
         audioSource = peerConnectionFactory.createAudioSource(audioConstraints);
         localAudioTrack = peerConnectionFactory.createAudioTrack("101", audioSource);
-
 
         if (videoCapturerAndroid != null) {
             videoCapturerAndroid.startCapture(1024, 720, 30);
