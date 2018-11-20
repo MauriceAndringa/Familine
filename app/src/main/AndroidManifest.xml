@@ -3,7 +3,6 @@
     package="com.example.familine">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
-    <uses-permission android:name="android.permission.CAMERA" android:required="true" />
     <uses-permission android:name="android.permission.INTERNET" android:required="true" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" android:required="true" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" android:required="true" />

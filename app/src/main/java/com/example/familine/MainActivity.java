@@ -1,13 +1,13 @@
 package com.example.familine;
 
-import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.media.AudioManager;
+import android.media.projection.MediaProjection;
+import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -22,17 +22,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
-import org.webrtc.Camera1Enumerator;
-import org.webrtc.CameraEnumerator;
 import org.webrtc.DefaultVideoDecoderFactory;
 import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
 import org.webrtc.IceCandidate;
-import org.webrtc.Logging;
 import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStream;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
+import org.webrtc.ScreenCapturerAndroid;
 import org.webrtc.SessionDescription;
 import org.webrtc.SurfaceViewRenderer;
 import org.webrtc.VideoCapturer;
@@ -69,66 +67,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     List<PeerConnection.IceServer> peerIceServers = new ArrayList<>();
 
     private static final String TAG = "MainActivity";
-    private static final int PERMISSIONS_REQUEST_CAMERA = 1;
-    private static final int PERMISSIONS_REQUEST_MODIFY_AUDIO_SETTINGS = 2;
+    private static final int CAPTURE_PERMISSION_REQUEST_CODE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        grantAppPermissions();
         initViews();
         initVideos();
         getIceServers();
         setSpeakerPhoneOn();
         SignallingClient.getInstance().init(this);
 
-        start();
+        startScreenCapture();
     }
 
-    private void grantAppPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                this,
-                new String[]{ Manifest.permission.CAMERA },
-                PERMISSIONS_REQUEST_CAMERA
-            );
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.MODIFY_AUDIO_SETTINGS)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{ Manifest.permission.MODIFY_AUDIO_SETTINGS },
-                    PERMISSIONS_REQUEST_MODIFY_AUDIO_SETTINGS
-            );
-        }
+    @TargetApi(21)
+    private void startScreenCapture() {
+        MediaProjectionManager mMediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+        startActivityForResult(mMediaProjectionManager.createScreenCaptureIntent(), CAPTURE_PERMISSION_REQUEST_CODE);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_CAMERA: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay!
-                } else {
-                    // permission denied, boo!
-                }
-                return;
-            }
-            case PERMISSIONS_REQUEST_MODIFY_AUDIO_SETTINGS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay!
-                } else {
-                    // permission denied, boo!
-                }
-                return;
-            }
-        }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode != CAPTURE_PERMISSION_REQUEST_CODE) { return; }
+        start(data);
     }
 
     private void initViews() {
@@ -190,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         audioManager.setSpeakerphoneOn(true);
     }
 
-    public void start() {
+    public void start(Intent permissionData) {
         //Initialize PeerConnectionFactory globals.
         PeerConnectionFactory.InitializationOptions initializationOptions =
                 PeerConnectionFactory.InitializationOptions.builder(this)
@@ -201,13 +165,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Create a new PeerConnectionFactory instance - using Hardware encoder and decoder.
         PeerConnectionFactory.Options options = new PeerConnectionFactory.Options();
         DefaultVideoEncoderFactory defaultVideoEncoderFactory = new DefaultVideoEncoderFactory(
-                rootEglBase.getEglBaseContext(),  /* enableIntelVp8Encoder */true,  /* enableH264HighProfile */true);
+                rootEglBase.getEglBaseContext(), true,true);
         DefaultVideoDecoderFactory defaultVideoDecoderFactory = new DefaultVideoDecoderFactory(rootEglBase.getEglBaseContext());
-        peerConnectionFactory = new PeerConnectionFactory(options, defaultVideoEncoderFactory, defaultVideoDecoderFactory);
+
+        peerConnectionFactory = PeerConnectionFactory.builder()
+                .setOptions(options)
+                .setVideoDecoderFactory(defaultVideoDecoderFactory)
+                .setVideoEncoderFactory(defaultVideoEncoderFactory)
+                .createPeerConnectionFactory();
+
+        peerConnectionFactory.setVideoHwAccelerationOptions(rootEglBase.getEglBaseContext(), rootEglBase.getEglBaseContext());
 
         //Now create a VideoCapturer instance.
         VideoCapturer videoCapturerAndroid;
-        videoCapturerAndroid = createCameraCapturer(new Camera1Enumerator(false));
+        videoCapturerAndroid = new ScreenCapturerAndroid(permissionData, new MediaProjection.Callback() {
+            @Override
+            public void onStop() {
+                super.onStop();
+                Log.e(TAG, "user has revoked permissions");
+            }
+        });
 
         //Create MediaConstraints - Will be useful for specifying video and audio constraints.
         audioConstraints = new MediaConstraints();
@@ -224,22 +201,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         localAudioTrack = peerConnectionFactory.createAudioTrack("101", audioSource);
 
         if (videoCapturerAndroid != null) {
-            videoCapturerAndroid.startCapture(1024, 720, 30);
+            DisplayMetrics metrics = new DisplayMetrics();
+            MainActivity.this.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            videoCapturerAndroid.startCapture(metrics.widthPixels, metrics.heightPixels, 30);
         }
         localVideoView.setVisibility(View.VISIBLE);
+
         // And finally, with our VideoRenderer ready, we
         // can add our renderer to the VideoTrack.
         localVideoTrack.addSink(localVideoView);
-
-        localVideoView.setMirror(true);
-        remoteVideoView.setMirror(true);
 
         gotUserMedia = true;
         if (SignallingClient.getInstance().isInitiator) {
             onTryToStart();
         }
     }
-
 
     /**
      * This method will be called directly by the app when it is the initiator and has got the local media
@@ -257,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
 
     /**
      * Creating the local peerconnection instance
@@ -339,7 +314,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
     }
-
 
     /**
      * Received local ice candidate. Send it to remote peer through signalling for negotiation
@@ -441,7 +415,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     private void updateVideoViews(final boolean remoteVisible) {
         runOnUiThread(() -> {
             ViewGroup.LayoutParams params = localVideoView.getLayoutParams();
@@ -456,11 +429,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
     /**
      * Closing up - normal hangup and app destroye
      */
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -499,37 +470,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void showToast(final String msg) {
         runOnUiThread(() -> Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show());
-    }
-
-    private VideoCapturer createCameraCapturer(CameraEnumerator enumerator) {
-        final String[] deviceNames = enumerator.getDeviceNames();
-
-        // First, try to find front facing camera
-        Logging.d(TAG, "Looking for front facing cameras.");
-        for (String deviceName : deviceNames) {
-            if (enumerator.isFrontFacing(deviceName)) {
-                Logging.d(TAG, "Creating front facing camera capturer.");
-                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
-
-                if (videoCapturer != null) {
-                    return videoCapturer;
-                }
-            }
-        }
-
-        // Front facing camera not found, try something else
-        Logging.d(TAG, "Looking for other cameras.");
-        for (String deviceName : deviceNames) {
-            if (!enumerator.isFrontFacing(deviceName)) {
-                Logging.d(TAG, "Creating other camera capturer.");
-                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
-
-                if (videoCapturer != null) {
-                    return videoCapturer;
-                }
-            }
-        }
-
-        return null;
     }
 }
