@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initViews();
         initVideos();
         getIceServers();
-        setSpeakerPhoneOn();
+        setSpeakerPhoneOn(true);
         SignallingClient.getInstance().init(this);
 
         startScreenCapture();
@@ -148,10 +148,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void setSpeakerPhoneOn() {
+    private void setSpeakerPhoneOn(boolean speakerOn) {
         AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
-        audioManager.setSpeakerphoneOn(true);
+        audioManager.setSpeakerphoneOn(speakerOn);
     }
 
     public void start(Intent permissionData) {
@@ -447,11 +447,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             localPeer.close();
             localPeer = null;
             SignallingClient.getInstance().close();
+            setSpeakerPhoneOn(false);
             updateVideoViews(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
