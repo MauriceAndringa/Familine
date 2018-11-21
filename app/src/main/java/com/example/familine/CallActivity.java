@@ -91,7 +91,11 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode != CAPTURE_PERMISSION_REQUEST_CODE) { return; }
+        if (resultCode == 0) {
+            returnToList();
+            return;
+        }
+
         start(data);
     }
 
@@ -312,7 +316,6 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         });
-
     }
 
     /**
@@ -452,10 +455,8 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Go back to list
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        finish();
+
+        returnToList();
     }
 
     @Override
@@ -474,5 +475,11 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
 
     public void showToast(final String msg) {
         runOnUiThread(() -> Toast.makeText(CallActivity.this, msg, Toast.LENGTH_SHORT).show());
+    }
+
+    public void returnToList() {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }
