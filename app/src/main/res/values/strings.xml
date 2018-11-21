@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">WebrtcCodelab</string>
+    <string name="app_name">Familine</string>
+    <string name="btn_text">Call</string>
 </resources>
