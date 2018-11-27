@@ -1,1 +1,2 @@
-include ':app', ':libwebrtc'
+include 'sample-core'
+include 'sample-videochat-webrtc'
