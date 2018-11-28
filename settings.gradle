@@ -1,2 +1,2 @@
-include 'sample-core'
-include 'sample-videochat-webrtc'
+include 'core'
+include 'familine'
