@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.core.CoreApp;
 import com.quickblox.core.exception.QBResponseException;
-import com.quickblox.sample.core.R;
+import com.core.R;
 
 import java.util.List;
 

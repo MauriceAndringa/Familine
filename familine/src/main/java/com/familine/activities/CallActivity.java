@@ -44,11 +44,13 @@ import com.quickblox.videochat.webrtc.BaseSession;
 import com.quickblox.videochat.webrtc.QBRTCCameraVideoCapturer;
 import com.quickblox.videochat.webrtc.QBRTCClient;
 import com.quickblox.videochat.webrtc.QBRTCConfig;
+import com.quickblox.videochat.webrtc.QBRTCMediaStream;
 import com.quickblox.videochat.webrtc.QBRTCScreenCapturer;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 import com.quickblox.videochat.webrtc.QBSignalingSpec;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacks;
+import com.quickblox.videochat.webrtc.callbacks.QBRTCMediaCapturerCallback;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionEventsCallback;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionStateCallback;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSignalingCallback;
@@ -177,9 +179,6 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
                 startScreenSharing(data);
                 Log.i(TAG, "Starting screen capture");
             }
-            else {
-
-            }
         }
     }
 
@@ -276,39 +275,6 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     private void initQBRTCClient() {
         rtcClient = QBRTCClient.getInstance(this);
-
-        rtcClient.setCameraErrorHandler(new CameraVideoCapturer.CameraEventsHandler() {
-            @Override
-            public void onCameraError(final String s) {
-
-                showToast("Camera error: " + s);
-            }
-
-            @Override
-            public void onCameraDisconnected() {
-                showToast("Camera onCameraDisconnected: ");
-            }
-
-            @Override
-            public void onCameraFreezed(String s) {
-                showToast("Camera freezed: " + s);
-                hangUpCurrentSession();
-            }
-
-            @Override
-            public void onCameraOpening(String s) {
-                showToast("Camera aOpening: " + s);
-            }
-
-            @Override
-            public void onFirstFrameAvailable() {
-                showToast("onFirstFrameAvailable: ");
-            }
-
-            @Override
-            public void onCameraClosed() {
-            }
-        });
 
 
         // Configure
@@ -458,6 +424,9 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
             this.currentSession = session;
             this.currentSession.addSessionCallbacksListener(CallActivity.this);
             this.currentSession.addSignalingCallback(CallActivity.this);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                QBRTCScreenCapturer.requestPermissions(CallActivity.this); //Request permission to share device screen
+            }
         }
     }
 

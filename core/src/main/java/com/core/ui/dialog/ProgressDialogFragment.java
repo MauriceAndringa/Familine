@@ -11,7 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import com.quickblox.sample.core.R;
+import com.core.R;
 
 public class ProgressDialogFragment extends DialogFragment {
 

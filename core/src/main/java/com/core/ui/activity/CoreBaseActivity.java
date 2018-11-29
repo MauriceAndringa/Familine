@@ -10,7 +10,7 @@ import android.view.ViewConfiguration;
 import android.widget.TextView;
 
 import com.quickblox.core.exception.QBResponseException;
-import com.quickblox.sample.core.R;
+import com.core.R;
 import com.core.utils.ErrorUtils;
 
 import java.lang.reflect.Field;

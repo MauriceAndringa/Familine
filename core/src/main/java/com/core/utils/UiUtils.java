@@ -7,7 +7,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
 
 import com.core.CoreApp;
-import com.quickblox.sample.core.R;
+import com.core.R;
 
 import java.util.HashMap;
 import java.util.Map;

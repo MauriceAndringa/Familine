@@ -8,7 +8,7 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
-import com.quickblox.sample.core.R;
+import com.core.R;
 
 public class DialogUtils {
 

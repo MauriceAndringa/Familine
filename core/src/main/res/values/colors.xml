@@ -35,4 +35,7 @@
     <color name="random_color_9">#166642</color>
     <color name="random_color_10">#bdbdbd</color>
 
+    <color name="green">#70a9a1</color>
+    <color name="dark_green">#63928c</color>
+
 </resources>

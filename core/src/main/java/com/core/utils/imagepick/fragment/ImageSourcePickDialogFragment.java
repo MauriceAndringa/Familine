@@ -10,7 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
-import com.quickblox.sample.core.R;
+import com.core.R;
 import com.core.utils.ImageUtils;
 import com.core.utils.SystemPermissionHelper;
 

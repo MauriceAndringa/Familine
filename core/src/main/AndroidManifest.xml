@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.quickblox.sample.core">
+    package="com.core">
 
     <application>
         <meta-data

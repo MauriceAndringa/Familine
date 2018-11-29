@@ -12,7 +12,7 @@ import android.support.v4.content.FileProvider;
 
 import com.core.CoreApp;
 import com.core.utils.constant.MimeType;
-import com.quickblox.sample.core.R;
+import com.core.R;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

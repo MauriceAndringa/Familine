@@ -148,11 +148,6 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
     public void setDuringCallActionBar() {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(currentUser.getFullName());
-        if (isPeerToPeerCall) {
-            actionBar.setSubtitle(getString(R.string.opponent, opponents.get(0).getFullName()));
-        } else {
-            actionBar.setSubtitle(getString(R.string.opponents, amountOpponents));
-        }
 
         actionButtonsEnabled(true);
     }
@@ -473,7 +468,6 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         localVideoTrack = videoTrack;
         isLocalVideoFullScreen = true;
         cameraState = CameraState.NONE;
-
 
         if (remoteFullScreenVideoView != null) {
             fillVideoView(remoteFullScreenVideoView, localVideoTrack, false);
