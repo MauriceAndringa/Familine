@@ -85,10 +85,6 @@ public class AudioConversationFragment extends BaseConversationFragment implemen
         otherOpponentsTextView = (TextView) view.findViewById(R.id.text_other_inc_users);
         otherOpponentsTextView.setText(getOtherOpponentsNames());
 
-        audioSwitchToggleButton = (ToggleButton) view.findViewById(R.id.toggle_speaker);
-        audioSwitchToggleButton.setVisibility(View.VISIBLE);
-
-        actionButtonsEnabled(false);
     }
 
     private void setVisibilityAlsoOnCallTextView() {
@@ -121,12 +117,6 @@ public class AudioConversationFragment extends BaseConversationFragment implemen
                 conversationFragmentCallbackListener.onSwitchAudio();
             }
         });
-    }
-
-    @Override
-    protected void actionButtonsEnabled(boolean inability) {
-        super.actionButtonsEnabled(inability);
-        audioSwitchToggleButton.setActivated(inability);
     }
 
     @Override

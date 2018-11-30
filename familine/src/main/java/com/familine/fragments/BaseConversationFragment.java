@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -38,8 +37,7 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
     protected ArrayList<QBUser> opponents;
     private QBRTCTypes.QBConferenceType qbConferenceType;
 
-    private ToggleButton micToggleVideoCall;
-    private ImageButton handUpVideoCall;
+    private ImageButton hangUpVideoCall;
     protected ConversationFragmentCallbackListener conversationFragmentCallbackListener;
     protected Chronometer timerChronometer;
     private boolean isMessageProcessed;
@@ -157,8 +155,7 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
     }
 
     protected void initViews(View view) {
-        micToggleVideoCall = (ToggleButton) view.findViewById(R.id.toggle_mic);
-        handUpVideoCall = (ImageButton) view.findViewById(R.id.button_hangup_call);
+        hangUpVideoCall = (ImageButton) view.findViewById(R.id.button_hangup_call);
         outgoingOpponentsRelativeLayout = view.findViewById(R.id.layout_background_outgoing_screen);
         allOpponentsTextView = (TextView) view.findViewById(R.id.text_outgoing_opponents_names);
         ringingTextView = (TextView) view.findViewById(R.id.text_ringing);
@@ -170,32 +167,16 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
 
     protected void initButtonsListener() {
 
-        micToggleVideoCall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                conversationFragmentCallbackListener.onSetAudioEnabled(isChecked);
-            }
-        });
-
-        handUpVideoCall.setOnClickListener(new View.OnClickListener() {
+        hangUpVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    actionButtonsEnabled(false);
-                    handUpVideoCall.setEnabled(false);
-                    handUpVideoCall.setActivated(false);
+                    hangUpVideoCall.setEnabled(true);
+                    hangUpVideoCall.setActivated(true);
 
                     conversationFragmentCallbackListener.onHangUpCurrentSession();
                     Log.d(TAG, "Call is stopped");
             }
         });
-    }
-
-    protected void actionButtonsEnabled(boolean inability) {
-
-        micToggleVideoCall.setEnabled(inability);
-
-        // inactivate toggle buttons
-        micToggleVideoCall.setActivated(inability);
     }
 
     private void startTimer() {
@@ -222,7 +203,6 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
     public void onCallStarted() {
         hideOutgoingScreen();
         startTimer();
-        actionButtonsEnabled(true);
     }
 
     @Override
@@ -232,7 +212,6 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
             return;
         }
         stopTimer();
-        actionButtonsEnabled(false);
     }
 
     @Override

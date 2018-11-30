@@ -1,5 +1,6 @@
 package com.familine.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.familine.R;
 
@@ -23,6 +25,9 @@ public class ScreenShareFragment extends BaseToolBarFragment {
 
     public static final String TAG = ScreenShareFragment.class.getSimpleName();
     private OnSharingEvents onSharingEvents;
+    private ImageButton hangUpVideoCall;
+    private ConversationFragmentCallbackListener conversationFragmentCallbackListener;
+    private View view;
 
     @Override
     int getFragmentLayout() {
@@ -32,15 +37,43 @@ public class ScreenShareFragment extends BaseToolBarFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  super.onCreateView(inflater, container, savedInstanceState);
+        view =  super.onCreateView(inflater, container, savedInstanceState);
 
         MyAdapter adapter = new MyAdapter(getChildFragmentManager());
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.pager);
+        hangUpVideoCall = (ImageButton) view.findViewById(R.id.button_hangup_call);
+        initButtonsListener();
         pager.setAdapter(adapter);
 
         toolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
         return view;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            conversationFragmentCallbackListener = (ConversationFragmentCallbackListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ConversationFragmentCallbackListener");
+        }
+    }
+
+    protected void initButtonsListener() {
+
+        hangUpVideoCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hangUpVideoCall.setEnabled(false);
+                hangUpVideoCall.setActivated(false);
+
+                conversationFragmentCallbackListener.onHangUpCurrentSession();
+                Log.d(TAG, "Call is stopped");
+            }
+        });
     }
 
     @Override
@@ -52,11 +85,10 @@ public class ScreenShareFragment extends BaseToolBarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.stop_screen_share:
+            case R.id.button_hangup_call:
                 Log.d(TAG, "stop_screen_share");
-                if (onSharingEvents != null) {
-                    onSharingEvents.onStopPreview();
-                }
+                onSharingEvents.onStopPreview();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -84,9 +116,9 @@ public class ScreenShareFragment extends BaseToolBarFragment {
     }
 
     public static class MyAdapter extends FragmentPagerAdapter {
-        private static final int NUM_ITEMS = 4;
+        private static final int NUM_ITEMS = 1;
 
-        private int[] images = {R.drawable.pres_img, R.drawable.p2p, R.drawable.group_call, R.drawable.opponents};
+        private int[] images = {R.drawable.pres_img};
 
         public MyAdapter(FragmentManager fm) {
             super(fm);

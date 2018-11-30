@@ -149,7 +149,6 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(currentUser.getFullName());
 
-        actionButtonsEnabled(true);
     }
 
     private void initVideoTrackSListener() {
@@ -162,14 +161,6 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         if (currentSession != null) {
             currentSession.removeVideoTrackCallbacksListener(this);
         }
-    }
-
-    @Override
-    protected void actionButtonsEnabled(boolean inability) {
-        super.actionButtonsEnabled(inability);
-        cameraToggle.setEnabled(inability);
-        // inactivate toggle buttons
-        cameraToggle.setActivated(inability);
     }
 
     @Override
@@ -227,12 +218,8 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         }
         connectionStatusLocal = (TextView) view.findViewById(R.id.connectionStatusLocal);
 
-        cameraToggle = (ToggleButton) view.findViewById(R.id.toggle_camera);
-        cameraToggle.setVisibility(View.VISIBLE);
-
         actionVideoButtonsLayout = (LinearLayout) view.findViewById(R.id.element_set_video_buttons);
 
-        actionButtonsEnabled(false);
         restoreSession();
     }
 
@@ -309,21 +296,13 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        // If user changed camera state few times and last state was CameraState.ENABLED_FROM_USER
-        // than we turn on cam, else we nothing change
-        if (cameraState != CameraState.DISABLED_FROM_USER) {
-            toggleCamera(true);
-        }
+
+
     }
 
 
     @Override
     public void onPause() {
-        // If camera state is CameraState.ENABLED_FROM_USER or CameraState.NONE
-        // than we turn off cam
-        if (cameraState != CameraState.DISABLED_FROM_USER) {
-            toggleCamera(false);
-        }
 
         super.onPause();
     }
@@ -399,67 +378,13 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
     protected void initButtonsListener() {
         super.initButtonsListener();
 
-        cameraToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (cameraState != CameraState.DISABLED_FROM_USER) {
-                    toggleCamera(isChecked);
-                }
-            }
-        });
     }
 
-    private void switchCamera(final MenuItem item) {
-        if (cameraState == CameraState.DISABLED_FROM_USER) {
-            return;
-        }
-        cameraToggle.setEnabled(false);
-        conversationFragmentCallbackListener.onSwitchCamera(new CameraVideoCapturer.CameraSwitchHandler() {
-            @Override
-            public void onCameraSwitchDone(boolean b) {
-                Log.d(TAG, "camera switched, bool = " + b);
-                isCurrentCameraFront = b;
-                updateSwitchCameraIcon(item);
-                toggleCameraInternal();
-            }
-
-            @Override
-            public void onCameraSwitchError(String s) {
-                Log.d(TAG, "camera switch error " + s);
-                Toaster.shortToast(getString(R.string.camera_swicth_failed) + s);
-                cameraToggle.setEnabled(true);
-            }
-        });
-    }
-
-    private void updateSwitchCameraIcon(final MenuItem item) {
-        if (isCurrentCameraFront) {
-            Log.d(TAG, "CameraFront now!");
-            item.setIcon(R.drawable.ic_camera_front);
-        } else {
-            Log.d(TAG, "CameraRear now!");
-            item.setIcon(R.drawable.ic_camera_rear);
-        }
-    }
-
-    private void toggleCameraInternal() {
-        Log.d(TAG, "Camera was switched!");
-        updateVideoView(isLocalVideoFullScreen ? remoteFullScreenVideoView : localVideoView, isCurrentCameraFront);
-        toggleCamera(true);
-    }
 
     private void runOnUiThread(Runnable runnable) {
         mainHandler.post(runnable);
     }
 
-    private void toggleCamera(boolean isNeedEnableCam) {
-        if (currentSession != null && currentSession.getMediaStreamManager() != null) {
-            conversationFragmentCallbackListener.onSetVideoEnabled(isNeedEnableCam);
-        }
-        if (connectionEstablished && !cameraToggle.isEnabled()) {
-            cameraToggle.setEnabled(true);
-        }
-    }
 
     ////////////////////////////  callbacks from QBRTCClientVideoTracksCallbacks ///////////////////
     @Override
@@ -825,17 +750,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.camera_switch:
-                Log.d("Conversation", "camera_switch");
-                switchCamera(item);
-                return true;
-            case R.id.screen_share:
-                startScreenSharing();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void startScreenSharing() {

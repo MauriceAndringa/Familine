@@ -424,7 +424,8 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
             this.currentSession = session;
             this.currentSession.addSessionCallbacksListener(CallActivity.this);
             this.currentSession.addSignalingCallback(CallActivity.this);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP && !isInCommingCall) {
                 QBRTCScreenCapturer.requestPermissions(CallActivity.this); //Request permission to share device screen
             }
         }
@@ -587,11 +588,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
     }
 
     private void addConversationFragment(boolean isIncomingCall) {
-        BaseConversationFragment conversationFragment = BaseConversationFragment.newInstance(
-                isVideoCall
-                        ? new VideoConversationFragment()
-                        : new AudioConversationFragment(),
-                isIncomingCall);
+        BaseConversationFragment conversationFragment = BaseConversationFragment.newInstance(new VideoConversationFragment(), isIncomingCall);
         FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_container, conversationFragment, conversationFragment.getClass().getSimpleName());
     }
 
@@ -638,7 +635,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     @Override
     public void onBackPressed() {
-
+        currentSession.hangUp(new HashMap<String, String>());
     }
 
     @Override
