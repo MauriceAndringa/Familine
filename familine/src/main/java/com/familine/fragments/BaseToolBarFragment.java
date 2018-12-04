@@ -37,7 +37,7 @@ public abstract class BaseToolBarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getFragmentLayout(), container, false);
-        initActionBar();
+        //initActionBar();
         return view;
     }
 

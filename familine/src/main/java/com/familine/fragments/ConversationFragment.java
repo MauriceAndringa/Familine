@@ -363,7 +363,7 @@ public class ConversationFragment extends BaseConversationFragment implements Se
         Log.d(TAG, "onRemoteVideoTrackReceive for opponent= " + userID);
 
         if (isPeerToPeerCall) {
-            setDuringCallActionBar();
+            //setDuringCallActionBar();
             fillVideoView(userID, remoteFullScreenVideoView, videoTrack, true);
             updateVideoView(remoteFullScreenVideoView, false);
         } else {
