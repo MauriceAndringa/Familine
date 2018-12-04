@@ -20,19 +20,16 @@ import com.quickblox.chat.connections.tcp.QBTcpConfigurationBuilder;
 import com.quickblox.chat.listeners.QBVideoChatSignalingManagerListener;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
-import com.familine.util.ChatPingAlarmManager;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCClient;
 import com.quickblox.videochat.webrtc.QBRTCConfig;
-
-import org.jivesoftware.smackx.ping.PingFailedListener;
 
 /**
  * QuickBlox team
  */
 public class CallService extends Service {
     private static final String TAG = CallService.class.getSimpleName();
-    private QBChatService chatService;
+    private QBChatService callService;
     private QBRTCClient rtcClient;
     private PendingIntent pendingIntent;
     private int currentCommand;
@@ -55,20 +52,13 @@ public class CallService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        createChatService();
-
-        Log.d(TAG, "Service onCreate()");
+        createCallService();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "Service started");
-
         parseIntentExtras(intent);
-
         startSuitableActions();
-
         return START_REDELIVER_INTENT;
     }
 
@@ -88,27 +78,26 @@ public class CallService extends Service {
         }
     }
 
-    private void createChatService() {
-        if (chatService == null) {
+    private void createCallService() {
+        if (callService == null) {
             QBTcpConfigurationBuilder configurationBuilder = new QBTcpConfigurationBuilder();
             configurationBuilder.setSocketTimeout(0);
             QBChatService.setConnectionFabric(new QBTcpChatConnectionFabric(configurationBuilder));
-
             QBChatService.setDebugEnabled(true);
-            chatService = QBChatService.getInstance();
+            callService = QBChatService.getInstance();
         }
     }
 
     private void startLoginToChat() {
-        if (!chatService.isLoggedIn()) {
-            loginToChat(currentUser);
+        if (!callService.isLoggedIn()) {
+            addToCallService(currentUser);
         } else {
             sendResultToActivity(true, null);
         }
     }
 
-    private void loginToChat(QBUser qbUser) {
-        chatService.login(qbUser, new QBEntityCallback<QBUser>() {
+    private void addToCallService(QBUser qbUser) {
+        callService.login(qbUser, new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
                 Log.d(TAG, "login onSuccess");
@@ -126,25 +115,14 @@ public class CallService extends Service {
     }
 
     private void startActionsOnSuccessLogin() {
-        initPingListener();
         initQBRTCClient();
         sendResultToActivity(true, null);
-    }
-
-    private void initPingListener() {
-        ChatPingAlarmManager.onCreate(this);
-        ChatPingAlarmManager.getInstanceFor().addPingListener(new PingFailedListener() {
-            @Override
-            public void pingFailed() {
-                Log.d(TAG, "Ping chat server failed");
-            }
-        });
     }
 
     private void initQBRTCClient() {
         rtcClient = QBRTCClient.getInstance(getApplicationContext());
         // Add signalling manager
-        chatService.getVideoChatWebRTCSignalingManager().addSignalingManagerListener(new QBVideoChatSignalingManagerListener() {
+        callService.getVideoChatWebRTCSignalingManager().addSignalingManagerListener(new QBVideoChatSignalingManagerListener() {
             @Override
             public void signalingCreated(QBSignaling qbSignaling, boolean createdLocally) {
                 if (!createdLocally) {
@@ -187,28 +165,29 @@ public class CallService extends Service {
     }
 
     private void logout() {
-        destroyRtcClientAndChat();
+        destroyRtcClientAndCallService();
     }
 
-    private void destroyRtcClientAndChat() {
+    private void destroyRtcClientAndCallService() {
         if (rtcClient != null) {
             rtcClient.destroy();
         }
-        ChatPingAlarmManager.onDestroy();
-        if (chatService != null) {
-            chatService.logout(new QBEntityCallback<Void>() {
+
+        if (callService != null) {
+            callService.logout(new QBEntityCallback<Void>() {
                 @Override
                 public void onSuccess(Void aVoid, Bundle bundle) {
-                    chatService.destroy();
+                    callService.destroy();
                 }
 
                 @Override
                 public void onError(QBResponseException e) {
                     Log.d(TAG, "logout onError " + e.getMessage());
-                    chatService.destroy();
+                    callService.destroy();
                 }
             });
         }
+
         stopSelf();
     }
 
@@ -229,6 +208,6 @@ public class CallService extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         Log.d(TAG, "Service onTaskRemoved()");
         super.onTaskRemoved(rootIntent);
-        destroyRtcClientAndChat();
+        destroyRtcClientAndCallService();
     }
 }

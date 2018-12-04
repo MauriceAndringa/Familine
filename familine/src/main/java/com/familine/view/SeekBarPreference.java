@@ -15,7 +15,6 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     private static final String ANDROID_NS ="http://schemas.android.com/apk/res/android";
     private static final String SEEKBAR_NS ="http://schemas.android.com/apk/res-auto";
 
-
     private Context context;
     private SeekBar seekBar;
     private int progress, maxSeekBarValue, minSeekBarValue, seekBarStepSize;
@@ -46,10 +45,6 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
         int stepSizeValueResourceId = attrs.getAttributeResourceValue(SEEKBAR_NS, "stepSize", R.integer.pref_default_int_value);
         seekBarStepSize = context.getResources().getInteger(stepSizeValueResourceId);
-
-        Log.v("Attribute", "max = " + maxSeekBarValue);
-        Log.v("Attribute", "min = " + minSeekBarValue);
-        Log.v("Attribute", "step = " + seekBarStepSize);
     }
 
     @Override

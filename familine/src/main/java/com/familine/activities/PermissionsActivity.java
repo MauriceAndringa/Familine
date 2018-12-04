@@ -19,7 +19,6 @@ public class PermissionsActivity extends AppCompatActivity {
     private static final String CHECK_ONLY_AUDIO = "checkAudio";
 
     private enum permissionFeatures {
-        CAMERA,
         MICROPHONE
     }
 

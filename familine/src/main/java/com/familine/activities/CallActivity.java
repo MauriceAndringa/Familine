@@ -17,16 +17,15 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.familine.fragments.AudioConversationFragment;
 import com.familine.fragments.BaseConversationFragment;
 import com.familine.fragments.ConversationFragmentCallbackListener;
 import com.familine.fragments.IncomeCallFragment;
 import com.familine.fragments.IncomeCallFragmentCallbackListener;
 import com.familine.fragments.OnCallEventsController;
 import com.familine.fragments.ScreenShareFragment;
-import com.familine.fragments.VideoConversationFragment;
+import com.familine.fragments.ConversationFragment;
 import com.familine.utils.Consts;
-import com.familine.utils.FragmentExecuotr;
+import com.familine.utils.FragmentExecutor;
 import com.familine.utils.PermissionsChecker;
 import com.familine.utils.RingtonePlayer;
 import com.familine.utils.SettingsUtil;
@@ -41,23 +40,19 @@ import com.familine.utils.QBEntityCallbackImpl;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.AppRTCAudioManager;
 import com.quickblox.videochat.webrtc.BaseSession;
-import com.quickblox.videochat.webrtc.QBRTCCameraVideoCapturer;
 import com.quickblox.videochat.webrtc.QBRTCClient;
 import com.quickblox.videochat.webrtc.QBRTCConfig;
-import com.quickblox.videochat.webrtc.QBRTCMediaStream;
 import com.quickblox.videochat.webrtc.QBRTCScreenCapturer;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 import com.quickblox.videochat.webrtc.QBSignalingSpec;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacks;
-import com.quickblox.videochat.webrtc.callbacks.QBRTCMediaCapturerCallback;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionEventsCallback;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionStateCallback;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSignalingCallback;
 import com.quickblox.videochat.webrtc.exception.QBRTCSignalException;
 
 import org.jivesoftware.smack.AbstractConnectionListener;
-import org.webrtc.CameraVideoCapturer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -165,7 +160,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     private void startScreenSharing(final Intent data){
         ScreenShareFragment screenShareFragment = ScreenShareFragment.newIntstance();
-        FragmentExecuotr.addFragmentWithBackStack(getSupportFragmentManager(), R.id.fragment_container, screenShareFragment, ScreenShareFragment.TAG);
+        FragmentExecutor.addFragmentWithBackStack(getSupportFragmentManager(), R.id.fragment_container, screenShareFragment, ScreenShareFragment.TAG);
         currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCScreenCapturer(data, null));
     }
 
@@ -581,15 +576,15 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
         if (currentSession != null) {
             IncomeCallFragment fragment = new IncomeCallFragment();
-            FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_container, fragment, INCOME_CALL_FRAGMENT);
+            FragmentExecutor.addFragment(getSupportFragmentManager(), R.id.fragment_container, fragment, INCOME_CALL_FRAGMENT);
         } else {
             Log.d(TAG, "SKIP addIncomeCallFragment method");
         }
     }
 
     private void addConversationFragment(boolean isIncomingCall) {
-        BaseConversationFragment conversationFragment = BaseConversationFragment.newInstance(new VideoConversationFragment(), isIncomingCall);
-        FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_container, conversationFragment, conversationFragment.getClass().getSimpleName());
+        BaseConversationFragment conversationFragment = BaseConversationFragment.newInstance(new ConversationFragment(), isIncomingCall);
+        FragmentExecutor.addFragment(getSupportFragmentManager(), R.id.fragment_container, conversationFragment, conversationFragment.getClass().getSimpleName());
     }
 
     public SharedPreferences getDefaultSharedPrefs() {
@@ -675,17 +670,6 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
             return;
         }
         QBRTCScreenCapturer.requestPermissions(CallActivity.this);
-    }
-
-    @Override
-    public void onSwitchCamera(CameraVideoCapturer.CameraSwitchHandler cameraSwitchHandler) {
-        ((QBRTCCameraVideoCapturer)(currentSession.getMediaStreamManager().getVideoCapturer()))
-                .switchCamera(cameraSwitchHandler);
-    }
-
-    @Override
-    public void onSetVideoEnabled(boolean isNeedEnableCam) {
-        setVideoEnabled(isNeedEnableCam);
     }
 
     @Override

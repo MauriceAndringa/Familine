@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -22,14 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Chronometer;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.familine.adapters.OpponentsFromCallAdapter;
-import com.core.utils.Toaster;
 import com.familine.R;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.BaseSession;
@@ -41,7 +37,6 @@ import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionStateCallback;
 import com.quickblox.videochat.webrtc.view.QBRTCSurfaceView;
 import com.quickblox.videochat.webrtc.view.QBRTCVideoTrack;
 
-import org.webrtc.CameraVideoCapturer;
 import org.webrtc.RendererCommon;
 import org.webrtc.SurfaceViewRenderer;
 import org.webrtc.VideoRenderer;
@@ -56,23 +51,21 @@ import java.util.Map;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 
-
 /**
  * QuickBlox team
  */
-public class VideoConversationFragment extends BaseConversationFragment implements Serializable, QBRTCClientVideoTracksCallbacks<QBRTCSession>,
+public class ConversationFragment extends BaseConversationFragment implements Serializable, QBRTCClientVideoTracksCallbacks<QBRTCSession>,
         QBRTCSessionStateCallback<QBRTCSession>, QBRTCSessionEventsCallback, OpponentsFromCallAdapter.OnAdapterEventListener {
 
     private static final int DEFAULT_ROWS_COUNT = 2;
     private static final int DEFAULT_COLS_COUNT = 3;
-    private static final long TOGGLE_CAMERA_DELAY = 1000;
     private static final long LOCAL_TRACk_INITIALIZE_DELAY = 500;
     private static final int RECYCLE_VIEW_PADDING = 2;
     private static final long UPDATING_USERS_DELAY = 2000;
     private static final long FULL_SCREEN_CLICK_DELAY = 1000;
     private static final int REQUEST_CODE_ATTACHMENT = 100;
 
-    private String TAG = VideoConversationFragment.class.getSimpleName();
+    private String TAG = ConversationFragment.class.getSimpleName();
 
     private View view;
     private LinearLayout actionVideoButtonsLayout;
@@ -92,9 +85,6 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
     private List<QBUser> allOpponents;
     private boolean connectionEstablished;
     private boolean allCallbacksInit;
-    private boolean isCurrentCameraFront;
-    private boolean isLocalVideoFullScreen;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -184,7 +174,6 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         Log.i(TAG, "initViews");
         opponentViewHolders = new SparseArray<>(opponents.size());
         isRemoteShown = false;
-        isCurrentCameraFront = true;
 
         remoteFullScreenVideoView = (QBRTCSurfaceView) view.findViewById(R.id.remote_video_view);
         remoteFullScreenVideoView.setOnClickListener(localViewOnClickListener);
@@ -254,7 +243,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         Log.i(TAG, "onGlobalLayout : cellSize=" + cellSizeWidth);
         opponentsAdapter = new OpponentsFromCallAdapter(getActivity(), currentSession, opponents, cellSizeWidth,
                 (int) getResources().getDimension(R.dimen.item_height));
-        opponentsAdapter.setAdapterListener(VideoConversationFragment.this);
+        opponentsAdapter.setAdapterListener(ConversationFragment.this);
         recyclerView.setAdapter(opponentsAdapter);
     }
 
@@ -372,7 +361,6 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
     @Override
     public void onRemoteVideoTrackReceive(QBRTCSession session, final QBRTCVideoTrack videoTrack, final Integer userID) {
         Log.d(TAG, "onRemoteVideoTrackReceive for opponent= " + userID);
-        isLocalVideoFullScreen = false;
 
         if (isPeerToPeerCall) {
             setDuringCallActionBar();
@@ -525,12 +513,11 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
                                boolean remoteRenderer) {
         videoTrack.removeRenderer(videoTrack.getRenderer());
         videoTrack.addRenderer(new VideoRenderer(videoView));
+
         if (userId != 0) {
             getVideoTrackMap().put(userId, videoTrack);
         }
-        if (!remoteRenderer) {
-            updateVideoView(videoView, isCurrentCameraFront);
-        }
+
         Log.d(TAG, (remoteRenderer ? "remote" : "local") + " Track is rendering");
     }
 
@@ -748,13 +735,6 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
             }
         }, UPDATING_USERS_DELAY);
     }
-
-    private enum CameraState {
-        NONE,
-        DISABLED_FROM_USER,
-        ENABLED_FROM_USER
-    }
-
 
     class DividerItemDecoration extends RecyclerView.ItemDecoration {
 

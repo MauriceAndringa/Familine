@@ -103,9 +103,7 @@ public class SettingsUtil {
         }
         // Get camera fps from settings.
         int cameraFps = getPreferenceInt(sharedPref, context, R.string.pref_frame_rate_key, R.string.pref_frame_rate_default);
-        Log.e(TAG, "cameraFps = " + cameraFps);
         QBRTCMediaConfig.setVideoFps(cameraFps);
-        Log.v(TAG, "cameraFps = " + QBRTCMediaConfig.getVideoFps());
     }
 
     public static void configRTCTimers(Context context) {

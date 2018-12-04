@@ -15,7 +15,6 @@ import com.familine.services.CallService;
 import com.familine.utils.CollectionsUtils;
 import com.familine.utils.Consts;
 import com.familine.utils.PermissionsChecker;
-import com.familine.utils.PushNotificationSender;
 import com.familine.utils.UsersUtils;
 import com.familine.utils.WebRtcSessionManager;
 import com.quickblox.chat.QBChatService;
@@ -110,6 +109,7 @@ public class OpponentsActivity extends BaseActivity {
 
     private void initFields() {
         Bundle extras = getIntent().getExtras();
+
         if (extras != null) {
             isRunForCall = extras.getBoolean(Consts.EXTRA_IS_STARTED_FOR_CALL);
         }
@@ -195,10 +195,6 @@ public class OpponentsActivity extends BaseActivity {
                 startLoadUsers();
                 return true;
 
-            case R.id.settings:
-                showSettings();
-                return true;
-
             case R.id.log_out:
                 logOut();
                 return true;
@@ -224,10 +220,6 @@ public class OpponentsActivity extends BaseActivity {
         }
     }
 
-    private void showSettings() {
-        SettingsActivity.start(this);
-    }
-
     private void startCall() {
         if (opponentsAdapter.getSelectedItems().size() > Consts.MAX_OPPONENTS_COUNT) {
             Toaster.longToast(String.format(getString(R.string.error_max_opponents_count),
@@ -244,8 +236,6 @@ public class OpponentsActivity extends BaseActivity {
         QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(opponentsList, conferenceType);
 
         WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
-
-        PushNotificationSender.sendPushMessage(opponentsList, currentUser.getFullName());
 
         CallActivity.start(this, false);
         opponentsAdapter.clearSelection();
