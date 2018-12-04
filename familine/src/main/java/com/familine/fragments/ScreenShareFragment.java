@@ -46,7 +46,7 @@ public class ScreenShareFragment extends BaseToolBarFragment {
         initButtonsListener();
         pager.setAdapter(adapter);
 
-        toolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
+        //toolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
         return view;
     }
 

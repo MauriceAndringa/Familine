@@ -375,7 +375,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         isLocalVideoFullScreen = false;
 
         if (isPeerToPeerCall) {
-            setDuringCallActionBar();
+            //setDuringCallActionBar();
             fillVideoView(userID, remoteFullScreenVideoView, videoTrack, true);
             updateVideoView(remoteFullScreenVideoView, false);
         } else {
