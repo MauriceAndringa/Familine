@@ -36,19 +36,7 @@ public abstract class BaseActivity extends CoreBaseActivity {
     }
 
     public void initDefaultActionBar() {
-        String currentUserFullName = "";
-        String currentRoomName = sharedPrefsHelper.get(Consts.PREF_CURREN_ROOM_NAME, "");
-
-        if (sharedPrefsHelper.getQbUser() != null) {
-            currentUserFullName = sharedPrefsHelper.getQbUser().getFullName();
-        }
-
-        setActionBarTitle(currentRoomName);
-    }
-
-    public void removeActionbarSubTitle() {
-        if (actionBar != null)
-            actionBar.setSubtitle(null);
+        setActionBarTitle(getTitle());
     }
 
     void showProgressDialog(@StringRes int messageId) {
@@ -69,9 +57,7 @@ public abstract class BaseActivity extends CoreBaseActivity {
         }
 
         progressDialog.setMessage(getString(messageId));
-
         progressDialog.show();
-
     }
 
     void hideProgressDialog() {

@@ -71,5 +71,4 @@ public class CoreBaseActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

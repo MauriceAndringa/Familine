@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_root"
-    style="@style/MatchParent"
-    tools:ignore="ContentDescription">
+    style="@style/SplashMatchParent">
 
     <LinearLayout
         style="@style/WrapContent"
@@ -11,19 +9,12 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/text_splash_app_title"
-            style="@style/SplashAppTitleStyle"
-            tools:text="AppName"/>
+        <ImageView
+            style="@style/SplashLogoStyle"
+            android:layout_marginBottom="40dp" />
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/text_splash_app_version"
-            style="@style/SplashAppVersionStyle"
-            android:layout_marginTop="20dp"
-            tools:text="@string/splash_chat_version" />
+        <ImageView
+            style="@style/SplashAppTitleStyle" />
+
     </LinearLayout>
-
-    <ImageView
-        style="@style/SplashLogoStyle"
-        android:layout_marginBottom="40dp" />
 </RelativeLayout>

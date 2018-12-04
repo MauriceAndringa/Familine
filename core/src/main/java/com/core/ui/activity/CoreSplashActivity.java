@@ -29,12 +29,6 @@ public abstract class CoreSplashActivity extends CoreBaseActivity {
         }
 
         setContentView(R.layout.activity_splash);
-
-        TextView appNameTextView = _findViewById(R.id.text_splash_app_title);
-        TextView versionTextView = _findViewById(R.id.text_splash_app_version);
-
-        appNameTextView.setText(getAppName());
-        versionTextView.setText(getString(R.string.splash_app_version, VersionUtils.getAppVersionName()));
     }
 
     protected abstract String getAppName();

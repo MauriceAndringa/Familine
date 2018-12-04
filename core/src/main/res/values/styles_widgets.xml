@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="FabStyle" parent="WrapContent">
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_alignParentRight">true</item>
@@ -28,25 +27,20 @@
         <item name="android:layout_centerInParent">true</item>
     </style>
 
-    <style name="SplashAppTitleStyle" parent="WrapContent">
-        <item name="android:textColor">@color/text_color_black</item>
-        <item name="android:textSize">@dimen/splash_main_text_size</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">@dimen/padding_common</item>
-        <item name="robotoTypeface">roboto_light</item>
+    <style name="SplashMatchParent" parent="MatchParent">
+        <item name="android:background">@color/green</item>
     </style>
 
-    <style name="SplashAppVersionStyle" parent="WrapContent">
-        <item name="android:textColor">@color/text_color_light_grey</item>
-        <item name="android:textSize">@dimen/splash_version_text_size</item>
-        <item name="robotoTypeface">roboto_light</item>
+    <style name="SplashAppTitleStyle" parent="WrapContent">
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:src">@drawable/splash_text</item>
     </style>
 
     <style name="SplashLogoStyle" parent="WrapContent">
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:src">@drawable/qb_logo</item>
+        <item name="android:src">@drawable/splash_logo</item>
     </style>
-
 
 </resources>
