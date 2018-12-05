@@ -27,14 +27,13 @@ import com.core.utils.Toaster;
 import com.familine.R;
 import com.familine.utils.QBEntityCallbackImpl;
 import com.quickblox.users.model.QBUser;
+import java.util.Random;
 
 public class LoginActivity extends BaseActivity {
 
     private String TAG = LoginActivity.class.getSimpleName();
 
     private EditText userNameEditText;
-    private EditText chatRoomNameEditText;
-
     private QBUser userForSave;
 
     public static void start(Context context) {
@@ -59,9 +58,6 @@ public class LoginActivity extends BaseActivity {
         setActionBarTitle(R.string.title_login_activity);
         userNameEditText = (EditText) findViewById(R.id.user_name);
         userNameEditText.addTextChangedListener(new LoginEditTextWatcher(userNameEditText));
-
-        chatRoomNameEditText = (EditText) findViewById(R.id.chat_room_name);
-        chatRoomNameEditText.addTextChangedListener(new LoginEditTextWatcher(chatRoomNameEditText));
     }
 
     @Override
@@ -75,7 +71,7 @@ public class LoginActivity extends BaseActivity {
 
         switch (item.getItemId()) {
             case R.id.menu_login_user_done:
-                if (isEnteredUserNameValid() && isEnteredRoomNameValid()) {
+                if (isEnteredUserNameValid()) {
                     hideKeyboard();
                     startSignUpNewUser(createUserWithEnteredData());
                 }
@@ -86,17 +82,12 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private boolean isEnteredRoomNameValid() {
-        return ValidationUtils.isRoomNameValid(this, chatRoomNameEditText);
-    }
-
     private boolean isEnteredUserNameValid() {
         return ValidationUtils.isUserNameValid(this, userNameEditText);
     }
 
     private void hideKeyboard() {
         KeyboardUtils.hideKeyboard(userNameEditText);
-        KeyboardUtils.hideKeyboard(chatRoomNameEditText);
     }
 
     private void startSignUpNewUser(final QBUser newUser) {
@@ -139,8 +130,17 @@ public class LoginActivity extends BaseActivity {
     }
 
     private QBUser createUserWithEnteredData() {
+        char[] chars1 = "ABCDEF012GHIJKL345MNOPQR678STUVWXYZ9".toCharArray();
+        StringBuilder sb1 = new StringBuilder();
+        Random random1 = new Random();
+        for (int i = 0; i < 6; i++)
+        {
+            char c1 = chars1[random1.nextInt(chars1.length)];
+            sb1.append(c1);
+        }
+        String random_string = sb1.toString();
         return createQBUserWithCurrentData(String.valueOf(userNameEditText.getText()),
-                String.valueOf(chatRoomNameEditText.getText()));
+                random_string);
     }
 
     private QBUser createQBUserWithCurrentData(String userName, String chatRoomName) {
@@ -174,7 +174,6 @@ public class LoginActivity extends BaseActivity {
             } else {
                 Toaster.longToast(getString(R.string.login_chat_login_error) + errorMessage);
                 userNameEditText.setText(userForSave.getFullName());
-                chatRoomNameEditText.setText(userForSave.getTags().get(0));
             }
         }
     }
