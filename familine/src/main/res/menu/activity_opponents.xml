@@ -17,6 +17,11 @@
         />
 
     <item
+        android:id="@+id/share_link"
+        android:title="@string/action_share_link"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/log_out"
         android:title="@string/action_logout"
         app:showAsAction="never"

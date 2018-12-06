@@ -46,6 +46,17 @@
             android:screenOrientation="portrait" />
         <activity android:name="com.familine.activities.PermissionsActivity" />
         <activity
+            android:name="com.familine.activities.InviteActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "https://app.familine.com/" -->
+                <data android:scheme="https"
+                    android:host="app.familine.com" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="com.familine.activities.CallActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:screenOrientation="portrait"

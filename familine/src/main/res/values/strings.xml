@@ -15,7 +15,7 @@
     <string name="dlg_creating_new_user">Creating new user…</string>
     <string name="dlg_logout">Logout…</string>
     <string name="dlg_loading_opponents">Loading opponents…</string>
-
+    <string name="dlg_processing_invite">Processing invitation…</string>
 
     <!-- Errors strings. -->
     <string name="error_max_opponents_count">You can select up to %d opponents</string>
@@ -31,6 +31,9 @@
     <string name="update_user_error">Update user error. Error</string>
     <string name="loading_users_error">Loading users error. Error</string>
 
+    <string name="invite_success">Successfully added user on invite.</string>
+    <string name="invite_error">Error on adding user.</string>
+
     <string name="permission_unavailable">%s is not available now!</string>
 
     <string name="field_name_user_name">User name</string>
@@ -41,6 +44,7 @@
     <!--menu-->
     <string name="action_start_login">Done</string>
     <string name="action_settings">Settings</string>
+    <string name="action_share_link">Share link</string>
     <string name="action_screen_share">Screen share</string>
     <string name="action_update_opponens_list">Update opponents list</string>
     <string name="action_logout">Logout</string>

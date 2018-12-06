@@ -4,9 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.util.Log;
 
+import com.core.utils.Toaster;
+import com.familine.R;
+import com.familine.utils.Consts;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
@@ -126,6 +133,17 @@ public class QbUsersDbManager {
 
         db.insert(DbHelper.DB_TABLE_NAME, null, cv);
         dbHelper.close();
+    }
+
+    public void updateUser(QBUser qbUser) {
+        ContentValues cv = new ContentValues();
+        DbHelper dbHelper = new DbHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        cv.put(DbHelper.DB_COLUMN_USER_FULL_NAME, qbUser.getFullName());
+        cv.put(DbHelper.DB_COLUMN_USER_LOGIN, qbUser.getLogin());
+        cv.put(DbHelper.DB_COLUMN_USER_ID, qbUser.getId());
+        cv.put(DbHelper.DB_COLUMN_USER_PASSWORD, qbUser.getPassword());
+        cv.put(DbHelper.DB_COLUMN_USER_TAG, qbUser.getTags().getItemsAsString());
     }
 
     public void clearDB() {

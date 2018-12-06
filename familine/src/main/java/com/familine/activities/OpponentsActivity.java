@@ -3,6 +3,8 @@ package com.familine.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,7 @@ import com.familine.utils.WebRtcSessionManager;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.messages.services.SubscribeService;
 import com.core.utils.SharedPrefsHelper;
 import com.core.utils.Toaster;
@@ -68,11 +71,8 @@ public class OpponentsActivity extends BaseActivity {
         setContentView(R.layout.activity_opponents);
 
         initFields();
-
         initDefaultActionBar();
-
         initUi();
-
         startLoadUsers();
 
         if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
@@ -199,6 +199,10 @@ public class OpponentsActivity extends BaseActivity {
                 showSettings();
                 return true;
 
+            case R.id.share_link:
+                shareLink();
+                return true;
+
             case R.id.log_out:
                 logOut();
                 return true;
@@ -226,6 +230,17 @@ public class OpponentsActivity extends BaseActivity {
 
     private void showSettings() {
         SettingsActivity.start(this);
+    }
+
+    private void shareLink() {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/url");
+
+        StringifyArrayList<String> tags = currentUser.getTags();
+        String shareUrl = "https://app.familine.com/?tag=" + tags.get(0);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+
+        startActivity(Intent.createChooser(sharingIntent, "Share account"));
     }
 
     private void startCall() {
