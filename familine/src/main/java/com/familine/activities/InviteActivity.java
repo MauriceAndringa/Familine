@@ -50,6 +50,12 @@ public class InviteActivity extends BaseActivity {
 
     private void addUserTag(QBUser user, String newTag) {
         QBUser qbUser = new QBUser();
+
+        if ( null == user.getId() ) {
+            Toaster.shortToast(R.string.invite_error);
+            return;
+        }
+
         qbUser.setId(user.getId());
 
         StringifyArrayList<String> newTagList = user.getTags();
