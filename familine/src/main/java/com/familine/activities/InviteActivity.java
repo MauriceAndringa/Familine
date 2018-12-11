@@ -21,17 +21,32 @@ public class InviteActivity extends BaseActivity {
         setContentView(R.layout.activity_opponents);
         showProgressDialog(R.string.dlg_processing_invite);
 
-        currentUser = sharedPrefsHelper.getQbUser();
-        String newTag = getIntent().getData().getQueryParameter("tag");
-        boolean updateUser = !userHasTag(currentUser, newTag);
+        int currentUserId = sharedPrefsHelper.getQbUser().getId();
+        QBUsers.getUser(currentUserId).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                currentUser = qbUser;
 
-        if (updateUser) {
-            addUserTag(currentUser, newTag);
-        }
+                String newTag = getIntent().getData().getQueryParameter("tag");
+                boolean updateUser = !userHasTag(currentUser, newTag);
 
-        hideProgressDialog();
-        OpponentsActivity.start(InviteActivity.this, false);
-        finish();
+                if (updateUser) {
+                    addUserTag(currentUser, newTag);
+                }
+
+                hideProgressDialog();
+                OpponentsActivity.start(InviteActivity.this, false);
+                finish();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Toaster.shortToast(R.string.invite_error);
+                hideProgressDialog();
+                OpponentsActivity.start(InviteActivity.this, false);
+                finish();
+            }
+        });
     }
 
     private boolean userHasTag(QBUser user, String tag) {
