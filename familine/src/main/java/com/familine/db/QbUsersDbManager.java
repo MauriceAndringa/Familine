@@ -135,17 +135,6 @@ public class QbUsersDbManager {
         dbHelper.close();
     }
 
-    public void updateUser(QBUser qbUser) {
-        ContentValues cv = new ContentValues();
-        DbHelper dbHelper = new DbHelper(mContext);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        cv.put(DbHelper.DB_COLUMN_USER_FULL_NAME, qbUser.getFullName());
-        cv.put(DbHelper.DB_COLUMN_USER_LOGIN, qbUser.getLogin());
-        cv.put(DbHelper.DB_COLUMN_USER_ID, qbUser.getId());
-        cv.put(DbHelper.DB_COLUMN_USER_PASSWORD, qbUser.getPassword());
-        cv.put(DbHelper.DB_COLUMN_USER_TAG, qbUser.getTags().getItemsAsString());
-    }
-
     public void clearDB() {
         DbHelper dbHelper = new DbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();

@@ -93,21 +93,21 @@ public class LoginActivity extends BaseActivity {
     private void startSignUpNewUser(final QBUser newUser) {
         showProgressDialog(R.string.dlg_creating_new_user);
         requestExecutor.signUpNewUser(newUser, new QBEntityCallback<QBUser>() {
-                    @Override
-                    public void onSuccess(QBUser result, Bundle params) {
-                        loginToChat(result);
-                    }
+                @Override
+                public void onSuccess(QBUser result, Bundle params) {
+                    loginToChat(result);
+                }
 
-                    @Override
-                    public void onError(QBResponseException e) {
-                        if (e.getHttpStatusCode() == Consts.ERR_LOGIN_ALREADY_TAKEN_HTTP_STATUS) {
-                            signInCreatedUser(newUser, true);
-                        } else {
-                            hideProgressDialog();
-                            Toaster.longToast(R.string.sign_up_error);
-                        }
+                @Override
+                public void onError(QBResponseException e) {
+                    if (e.getHttpStatusCode() == Consts.ERR_LOGIN_ALREADY_TAKEN_HTTP_STATUS) {
+                        signInCreatedUser(newUser, true);
+                    } else {
+                        hideProgressDialog();
+                        Toaster.longToast(R.string.sign_up_error);
                     }
                 }
+            }
         );
     }
 

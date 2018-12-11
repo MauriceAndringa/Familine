@@ -7,13 +7,11 @@ import android.support.annotation.StringRes;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.familine.utils.Consts;
 import com.core.gcm.GooglePlayServicesHelper;
 import com.core.ui.activity.CoreBaseActivity;
 import com.core.utils.ErrorUtils;
 import com.core.utils.SharedPrefsHelper;
 import com.familine.App;
-import com.familine.R;
 import com.familine.util.QBResRequestExecutor;
 
 /**

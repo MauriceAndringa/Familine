@@ -45,16 +45,35 @@ public class OpponentsAdapter extends BaseSelectableListAdapter<QBUser> {
         if (user != null) {
             holder.opponentName.setText(user.getFullName());
 
+            if (selectedItems.contains(user)){
+                convertView.setBackgroundResource(R.color.background_color_selected_user_item);
+                holder.opponentIcon.setBackgroundDrawable(
+                UiUtils.getColoredCircleDrawable(ResourceUtils.getColor(R.color.icon_background_color_selected_user)));
+                holder.opponentIcon.setImageResource(R.drawable.ic_checkmark);
+            } else {
                 convertView.setBackgroundResource(R.color.background_color_normal_user_item);
                 holder.opponentIcon.setBackgroundDrawable(UiUtils.getColorCircleDrawable(user.getId()));
                 holder.opponentIcon.setImageResource(R.drawable.ic_person);
+            }
         }
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectItem(position);
-                selectedItemsCountChangedListener.onClick();
+                if (isItemSelected(position)) {
+                    toggleSelection(position);
+                } else {
+                    selectItem(position);
+                    selectedItemsCountChangedListener.onClick();
+                }
+            }
+        });
+
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                toggleSelection(position);
+                return true;
             }
         });
 
@@ -72,7 +91,7 @@ public class OpponentsAdapter extends BaseSelectableListAdapter<QBUser> {
         }
     }
 
-    public interface SelectedItemsCountsChangedListener{
+    public interface SelectedItemsCountsChangedListener {
         void onClick();
     }
 }
