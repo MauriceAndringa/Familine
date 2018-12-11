@@ -93,5 +93,6 @@ public class OpponentsAdapter extends BaseSelectableListAdapter<QBUser> {
 
     public interface SelectedItemsCountsChangedListener {
         void onClick();
+        void onCountSelectedItemsChanged(int count);
     }
 }

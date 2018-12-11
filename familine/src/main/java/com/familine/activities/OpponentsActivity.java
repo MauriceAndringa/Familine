@@ -3,6 +3,7 @@ package com.familine.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -173,6 +174,11 @@ public class OpponentsActivity extends BaseActivity {
             public void onClick() {
                 callUser();
             }
+
+            @Override
+            public void onCountSelectedItemsChanged(int count) {
+                updateActionBar(count);
+            }
         });
 
         opponentsListView.setAdapter(opponentsAdapter);
@@ -180,7 +186,13 @@ public class OpponentsActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_opponents, menu);
+        if (opponentsAdapter != null && !opponentsAdapter.getSelectedItems().isEmpty()) {
+            getMenuInflater().inflate(R.menu.activity_selected_opponents, menu);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        } else {
+            getMenuInflater().inflate(R.menu.activity_opponents, menu);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -262,6 +274,14 @@ public class OpponentsActivity extends BaseActivity {
 
         CallActivity.start(this, false);
         opponentsAdapter.clearSelection();
+    }
+
+    private void updateActionBar(int countSelectedUsers) {
+        if (countSelectedUsers < 1) {
+            initDefaultActionBar();
+        }
+
+        invalidateOptionsMenu();
     }
 
     private void callUser() {
