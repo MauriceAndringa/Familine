@@ -126,8 +126,12 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
 
         TextView callerNameTextView = (TextView) view.findViewById(R.id.text_caller_name);
 
+        opponentsIds = currentSession.getOpponents();
+        Integer callerID = (Integer) opponentsIds.get(0);
+        System.out.println(callerID);
         QBUser callerUser = qbUserDbManager.getUserById(currentSession.getCallerID());
-        callerNameTextView.setText(UsersUtils.getUserNameOrId(callerUser, currentSession.getCallerID()));
+        System.out.println(callerUser);
+        callerNameTextView.setText(UsersUtils.getUserNameOrId(callerUser, callerID));
 
         TextView otherIncUsersTextView = (TextView) view.findViewById(R.id.text_other_inc_users);
         otherIncUsersTextView.setText(getOtherIncUsersNames());

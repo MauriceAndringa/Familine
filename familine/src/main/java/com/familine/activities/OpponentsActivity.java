@@ -259,7 +259,10 @@ public class OpponentsActivity extends BaseActivity {
         sharingIntent.setType("text/url");
 
         StringifyArrayList<String> tags = currentUser.getTags();
-        String shareUrl = "https://app.familine.com/?tag=" + tags.get(0);
+        int currentUserId = sharedPrefsHelper.getQbUser().getId();
+
+        String shareUrl = "https://app.familine.com/?tag=" + tags.get(0) + "&id=" + currentUserId;
+
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
 
         startActivity(Intent.createChooser(sharingIntent, "Invite helper by link"));

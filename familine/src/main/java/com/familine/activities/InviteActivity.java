@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.core.utils.Toaster;
 import com.familine.R;
+import com.familine.adapters.OpponentsAdapter;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
@@ -14,6 +15,7 @@ import com.quickblox.users.model.QBUser;
 public class InviteActivity extends BaseActivity {
 
     private QBUser currentUser;
+    private QBUser opponentUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,10 +32,39 @@ public class InviteActivity extends BaseActivity {
                 String newTag = getIntent().getData().getQueryParameter("tag");
                 boolean updateUser = !userHasTag(currentUser, newTag);
 
+
                 if (updateUser) {
                     addUserTag(currentUser, newTag);
-                }
 
+                }
+                String newId = getIntent().getData().getQueryParameter("id");
+                Integer opponentId = Integer.parseInt(newId);
+
+                QBUsers.getUser(opponentId).performAsync(new QBEntityCallback<QBUser>() {
+                    @Override
+                    public void onSuccess(QBUser qbUser, Bundle bundle) {
+
+                        opponentUser = qbUser;
+
+                        StringifyArrayList<String> tags = currentUser.getTags();
+                        boolean updateUser = !userHasTag(opponentUser, tags.get(0));
+
+                        if (updateUser){
+                            addUserTag(opponentUser, tags.get(0));
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        Toaster.shortToast(R.string.invite_error);
+                        hideProgressDialog();
+                        OpponentsActivity.start(InviteActivity.this, false);
+                        finish();
+                    }
+                });
+                
                 hideProgressDialog();
                 OpponentsActivity.start(InviteActivity.this, false);
                 finish();
@@ -47,6 +78,10 @@ public class InviteActivity extends BaseActivity {
                 finish();
             }
         });
+
+
+
+
     }
 
     private boolean userHasTag(QBUser user, String tag) {
@@ -77,6 +112,7 @@ public class InviteActivity extends BaseActivity {
         newTagList.add(newTag);
         qbUser.setTags(newTagList);
 
+        //set tag to user
         QBUsers.updateUser(qbUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
