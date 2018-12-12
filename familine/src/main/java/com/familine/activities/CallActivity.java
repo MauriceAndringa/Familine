@@ -145,7 +145,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
         if (!isInCommingCall){
             startAudioManager();
-            ringtonePlayer.play(true);
+            //ringtonePlayer.play(true);
         }
         startSuitableFragment(isInCommingCall);
     }
@@ -165,8 +165,6 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
         FragmentExecuotr.addFragmentWithBackStack(getSupportFragmentManager(), R.id.fragment_container, screenShareFragment, ScreenShareFragment.TAG);
         currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCScreenCapturer(data, null));
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,final Intent data) {

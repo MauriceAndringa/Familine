@@ -3,6 +3,7 @@ package com.familine.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
@@ -166,18 +168,25 @@ public class OpponentsActivity extends BaseActivity {
 
     private void proceedInitUsersList() {
         currentOpponentsList = dbManager.getAllUsers();
-        Log.d(TAG, "proceedInitUsersList currentOpponentsList= " + currentOpponentsList);
         currentOpponentsList.remove(sharedPrefsHelper.getQbUser());
+
         opponentsAdapter = new OpponentsAdapter(this, currentOpponentsList);
         opponentsAdapter.setSelectedItemsCountsChangedListener(new OpponentsAdapter.SelectedItemsCountsChangedListener() {
             @Override
-            public void onClick() {
-                callUser();
+            public void onClick(int position) {
+                boolean isEmpty = opponentsAdapter.getSelectedItems().isEmpty();
+
+                if (!isEmpty) {
+                    return;
+                }
+
+                callUser(position);
             }
 
             @Override
-            public void onCountSelectedItemsChanged(int count) {
-                updateActionBar(count);
+            public void onCountSelectedItemsChanged() {
+                boolean hasItems = opponentsAdapter.getSelectedItems().isEmpty();
+                updateActionBar(hasItems);
             }
         });
 
@@ -188,7 +197,6 @@ public class OpponentsActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         if (opponentsAdapter != null && !opponentsAdapter.getSelectedItems().isEmpty()) {
             getMenuInflater().inflate(R.menu.activity_selected_opponents, menu);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         } else {
             getMenuInflater().inflate(R.menu.activity_opponents, menu);
         }
@@ -211,6 +219,10 @@ public class OpponentsActivity extends BaseActivity {
 
             case R.id.share_link:
                 shareLink();
+                return true;
+
+            case R.id.delete_user:
+                deleteUser();
                 return true;
 
             case R.id.log_out:
@@ -250,46 +262,61 @@ public class OpponentsActivity extends BaseActivity {
         String shareUrl = "https://app.familine.com/?tag=" + tags.get(0);
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
 
-        startActivity(Intent.createChooser(sharingIntent, "Share account"));
+        startActivity(Intent.createChooser(sharingIntent, "Invite helper by link"));
     }
 
-    private void startCall() {
-        if (opponentsAdapter.getSelectedItems().size() > Consts.MAX_OPPONENTS_COUNT) {
-            Toaster.longToast(String.format(getString(R.string.error_max_opponents_count),
-                    Consts.MAX_OPPONENTS_COUNT));
-            return;
-        }
+    private void startCall(Integer userId) {
+        ArrayList<Integer> opponentsList = new ArrayList<>();
+        opponentsList.add(userId);
 
-        Log.d(TAG, "startCall()");
-        ArrayList<Integer> opponentsList = CollectionsUtils.getIdsSelectedOpponents(opponentsAdapter.getSelectedItems());
         QBRTCTypes.QBConferenceType conferenceType = QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO;
-
         QBRTCClient qbrtcClient = QBRTCClient.getInstance(getApplicationContext());
-
         QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(opponentsList, conferenceType);
-
         WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
-
         PushNotificationSender.sendPushMessage(opponentsList, currentUser.getFullName());
 
         CallActivity.start(this, false);
         opponentsAdapter.clearSelection();
     }
 
-    private void updateActionBar(int countSelectedUsers) {
-        if (countSelectedUsers < 1) {
-            initDefaultActionBar();
-        }
-
+    private void updateActionBar(boolean isUserSelected) {
+        initActionBar(isUserSelected);
         invalidateOptionsMenu();
     }
 
-    private void callUser() {
+    private void initActionBar(boolean isUserSelected) {
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar == null) {
+            return;
+        }
+
+        actionBar.setTitle(getTitle());
+
+        if (isUserSelected) {
+            actionBar.setDisplayShowTitleEnabled(true);
+        } else {
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
+    }
+
+    private void callUser(int position) {
         if (isLoggedInChat()) {
-            startCall();
+            QBUser user = opponentsAdapter.getItem(position);
+            startCall(user.getId());
         }
         if (checker.lacksPermissions(Consts.PERMISSIONS)) {
             startPermissionsActivity(false);
+        }
+    }
+
+    private void deleteUser() {
+        Collection<QBUser> selectedUsers = opponentsAdapter.getSelectedItems();
+
+        for (QBUser user : selectedUsers) {
+            // get user tag
+            // get current user
+            // remove user tag from current user
         }
     }
 

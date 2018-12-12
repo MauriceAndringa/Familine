@@ -62,9 +62,9 @@ public class OpponentsAdapter extends BaseSelectableListAdapter<QBUser> {
             public void onClick(View v) {
                 if (isItemSelected(position)) {
                     toggleSelection(position);
+                    selectedItemsCountChangedListener.onCountSelectedItemsChanged();
                 } else {
-                    selectItem(position);
-                    selectedItemsCountChangedListener.onClick();
+                    selectedItemsCountChangedListener.onClick(position);
                 }
             }
         });
@@ -73,6 +73,7 @@ public class OpponentsAdapter extends BaseSelectableListAdapter<QBUser> {
             @Override
             public boolean onLongClick(View v) {
                 toggleSelection(position);
+                selectedItemsCountChangedListener.onCountSelectedItemsChanged();
                 return true;
             }
         });
@@ -92,7 +93,7 @@ public class OpponentsAdapter extends BaseSelectableListAdapter<QBUser> {
     }
 
     public interface SelectedItemsCountsChangedListener {
-        void onClick();
-        void onCountSelectedItemsChanged(int count);
+        void onClick(int position);
+        void onCountSelectedItemsChanged();
     }
 }
