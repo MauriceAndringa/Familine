@@ -31,6 +31,7 @@ import com.quickblox.videochat.webrtc.QBRTCTypes;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -127,10 +128,8 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
         TextView callerNameTextView = (TextView) view.findViewById(R.id.text_caller_name);
 
         opponentsIds = currentSession.getOpponents();
-        Integer callerID = (Integer) opponentsIds.get(0);
-
-        QBUser callerUser = qbUserDbManager.getUserById(currentSession.getCallerID());
-        callerNameTextView.setText(UsersUtils.getUserNameOrId(callerUser, callerID));
+        Map<String, String> userInfo = currentSession.getUserInfo();
+        callerNameTextView.setText(userInfo.get("userName"));
 
         TextView otherIncUsersTextView = (TextView) view.findViewById(R.id.text_other_inc_users);
         otherIncUsersTextView.setText(getOtherIncUsersNames());

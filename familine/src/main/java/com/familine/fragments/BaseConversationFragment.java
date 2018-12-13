@@ -26,6 +26,8 @@ import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class BaseConversationFragment extends BaseToolBarFragment implements CallActivity.CurrentCallStateCallback {
 
@@ -142,7 +144,9 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
             if (isIncomingCall) {
                 currentSession.acceptCall(null);
             } else {
-                currentSession.startCall(null);
+                Map<String, String> userInfo = new HashMap<>();
+                userInfo.put("userName", currentUser.getFullName() );
+                currentSession.startCall(userInfo);
             }
             isMessageProcessed = true;
         }
