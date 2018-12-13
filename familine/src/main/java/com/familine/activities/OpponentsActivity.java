@@ -29,13 +29,18 @@ import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.messages.services.SubscribeService;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCClient;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
@@ -259,10 +264,7 @@ public class OpponentsActivity extends BaseActivity {
         sharingIntent.setType("text/url");
 
         StringifyArrayList<String> tags = currentUser.getTags();
-        int currentUserId = sharedPrefsHelper.getQbUser().getId();
-
-        String shareUrl = "https://app.familine.com/?tag=" + tags.get(0) + "&id=" + currentUserId;
-
+        String shareUrl = "https://app.familine.com/?tag=" + tags.get(0);
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
 
         startActivity(Intent.createChooser(sharingIntent, "Invite helper by link"));
@@ -276,7 +278,6 @@ public class OpponentsActivity extends BaseActivity {
         QBRTCClient qbrtcClient = QBRTCClient.getInstance(getApplicationContext());
         QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(opponentsList, conferenceType);
         WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
-        PushNotificationSender.sendPushMessage(opponentsList, currentUser.getFullName());
 
         CallActivity.start(this, false);
         opponentsAdapter.clearSelection();
@@ -314,13 +315,36 @@ public class OpponentsActivity extends BaseActivity {
     }
 
     private void deleteUser() {
-        Collection<QBUser> selectedUsers = opponentsAdapter.getSelectedItems();
+        Object[] selectedUsers = opponentsAdapter.getSelectedItems().toArray();
+        QBUser user = (QBUser) selectedUsers[0];
+        StringifyArrayList<String> tagList = user.getTags();
+        String userTag = sharedPrefsHelper.getQbUser().getTags().get(0);
 
-        for (QBUser user : selectedUsers) {
-            // get user tag
-            // get current user
-            // remove user tag from current user
+        if ( !tagList.contains(userTag) ) {
+            Toaster.shortToast(R.string.delete_error);
+            return;
         }
+
+        QBUser qbUser = new QBUser();
+        qbUser.setId( user.getId() );
+        tagList.remove(userTag);
+        qbUser.setTags(tagList);
+
+        QBUsers.updateUser(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                Toaster.shortToast(R.string.delete_success);
+                opponentsAdapter.clearSelection();
+                updateActionBar(true);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Toaster.shortToast(R.string.delete_error);
+                opponentsAdapter.clearSelection();
+                updateActionBar(true);
+            }
+        });
     }
 
     private void logOut() {

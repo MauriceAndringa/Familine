@@ -7,6 +7,8 @@ import com.familine.activities.OpponentsActivity;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacksImpl;
 
+import java.util.Map;
+
 /**
  * Created by tereha on 16.05.16.
  */

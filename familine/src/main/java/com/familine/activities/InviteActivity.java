@@ -1,6 +1,7 @@
 package com.familine.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
 import com.core.utils.Toaster;
@@ -13,9 +14,7 @@ import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 public class InviteActivity extends BaseActivity {
-
     private QBUser currentUser;
-    private QBUser opponentUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,56 +31,19 @@ public class InviteActivity extends BaseActivity {
                 String newTag = getIntent().getData().getQueryParameter("tag");
                 boolean updateUser = !userHasTag(currentUser, newTag);
 
-
                 if (updateUser) {
                     addUserTag(currentUser, newTag);
-
                 }
-                String newId = getIntent().getData().getQueryParameter("id");
-                Integer opponentId = Integer.parseInt(newId);
 
-                QBUsers.getUser(opponentId).performAsync(new QBEntityCallback<QBUser>() {
-                    @Override
-                    public void onSuccess(QBUser qbUser, Bundle bundle) {
-
-                        opponentUser = qbUser;
-
-                        StringifyArrayList<String> tags = currentUser.getTags();
-                        boolean updateUser = !userHasTag(opponentUser, tags.get(0));
-
-                        if (updateUser){
-                            addUserTag(opponentUser, tags.get(0));
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onError(QBResponseException e) {
-                        Toaster.shortToast(R.string.invite_error);
-                        hideProgressDialog();
-                        OpponentsActivity.start(InviteActivity.this, false);
-                        finish();
-                    }
-                });
-                
-                hideProgressDialog();
-                OpponentsActivity.start(InviteActivity.this, false);
-                finish();
+                finishActivity();
             }
 
             @Override
             public void onError(QBResponseException e) {
                 Toaster.shortToast(R.string.invite_error);
-                hideProgressDialog();
-                OpponentsActivity.start(InviteActivity.this, false);
-                finish();
+                finishActivity();
             }
         });
-
-
-
-
     }
 
     private boolean userHasTag(QBUser user, String tag) {
@@ -112,7 +74,6 @@ public class InviteActivity extends BaseActivity {
         newTagList.add(newTag);
         qbUser.setTags(newTagList);
 
-        //set tag to user
         QBUsers.updateUser(qbUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
@@ -124,6 +85,12 @@ public class InviteActivity extends BaseActivity {
                 Toaster.shortToast(R.string.invite_error);
             }
         });
+    }
+
+    private void finishActivity() {
+        hideProgressDialog();
+        OpponentsActivity.start(InviteActivity.this, false);
+        finish();
     }
 
     @Override
