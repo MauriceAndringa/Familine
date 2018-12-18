@@ -11,7 +11,6 @@ import android.view.View;
 import com.familine.fragments.SettingsFragment;
 import com.core.utils.Toaster;
 import com.familine.R;
-import com.familine.view.SeekBarPreference;
 
 /**
  * QuickBlox team
@@ -97,8 +96,6 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
         // Set summary to be the user-description for the selected value
         if (updatedPref instanceof EditTextPreference) {
             ((EditTextPreference) updatedPref).setText(sharedPreferences.getString(key, ""));
-        } else if (updatedPref instanceof SeekBarPreference){
-            updatedPref.setSummary(String.valueOf(sharedPreferences.getInt(key, 0)));
         } else {
             updatedPref.setSummary(sharedPreferences.getString(key, ""));
         }

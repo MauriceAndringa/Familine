@@ -96,7 +96,6 @@
 
     <string name="text_push_notification_message">"%s is calling you"</string>
 
-
     <!-- Settings strings. -->
     <string name="title_video_category">Video</string>
     <string name="title_call_settings_category">Call Settings</string>

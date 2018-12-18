@@ -16,7 +16,7 @@ public class SplashActivity extends CoreSplashActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
-        
+
         if (sharedPrefsHelper.hasQbUser()) {
             startLoginService(sharedPrefsHelper.getQbUser());
             startOpponentsActivity();
