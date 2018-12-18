@@ -3,6 +3,7 @@ package com.familine.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -151,6 +152,13 @@ public class OpponentsActivity extends BaseActivity {
 
     private void initUi() {
         opponentsListView = (ListView) findViewById(R.id.list_opponents);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareLink();
+            }
+        });
     }
 
     private boolean isCurrentOpponentsListActual(ArrayList<QBUser> actualCurrentOpponentsList) {
@@ -220,10 +228,6 @@ public class OpponentsActivity extends BaseActivity {
 
             case R.id.settings:
                 showSettings();
-                return true;
-
-            case R.id.share_link:
-                shareLink();
                 return true;
 
             case R.id.delete_user:
