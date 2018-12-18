@@ -15,16 +15,14 @@ public class SplashActivity extends CoreSplashActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
 
         if (sharedPrefsHelper.hasQbUser()) {
             startLoginService(sharedPrefsHelper.getQbUser());
             startOpponentsActivity();
-            return;
         }
 
-        if (checkConfigsWithSnackebarError()) {
+        if (checkConfigsWithSnackbarError()) {
             proceedToTheNextActivityWithDelay();
         }
     }

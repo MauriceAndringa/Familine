@@ -29,6 +29,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name="com.familine.activities.SplashActivity"
+            android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -18,6 +18,12 @@
         <item name="android:windowBackground">@color/background_app_color</item>
     </style>
 
+    <style name="SplashTheme" parent="BaseAppTheme">
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryDark">@color/dark_green</item>
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
     <style name="AppTheme.BlueAccent">
         <item name="colorAccent">@color/color_blue_accent</item>
     </style>

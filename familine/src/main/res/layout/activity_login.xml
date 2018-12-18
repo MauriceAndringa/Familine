@@ -3,8 +3,7 @@
     android:id="@+id/root_view_login_activity"
     style="@style/MatchParent"
     android:orientation="vertical"
-    android:layout_marginLeft="@dimen/padding_start"
-    >
+    android:layout_marginLeft="@dimen/padding_start">
 
     <TextView
         style="@style/MatchWidth"
