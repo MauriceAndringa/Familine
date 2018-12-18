@@ -48,7 +48,7 @@ public abstract class CoreSplashActivity extends CoreBaseActivity {
         }, SPLASH_DELAY);
     }
 
-    protected boolean checkConfigsWithSnackebarError(){
+    protected boolean checkConfigsWithSnackbarError(){
         if (!sampleConfigIsCorrect()){
             showSnackbarErrorParsingConfigs();
             return false;
