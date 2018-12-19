@@ -3,6 +3,7 @@ package com.familine.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -128,7 +129,7 @@ public class OpponentsActivity extends BaseActivity {
 
     private void startLoadUsers() {
         showProgressDialog(R.string.dlg_loading_opponents);
-        String currentRoomName = SharedPrefsHelper.getInstance().get(Consts.PREF_CURREN_ROOM_NAME);
+        String currentRoomName = currentUser.getTags().get(0);
         requestExecutor.loadUsersByTag(currentRoomName, new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
             public void onSuccess(ArrayList<QBUser> result, Bundle params) {
@@ -153,12 +154,24 @@ public class OpponentsActivity extends BaseActivity {
     private void initUi() {
         opponentsListView = (ListView) findViewById(R.id.list_opponents);
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                shareLink();
-            }
-        });
+
+        // Show/hide floating action button based on role
+        String userRole = currentUser.getExternalId();
+        if (userRole == null) return;
+
+        if (userRole.equals("0")) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    shareLink();
+                }
+            });
+        } else {
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.GONE);
+        }
     }
 
     private boolean isCurrentOpponentsListActual(ArrayList<QBUser> actualCurrentOpponentsList) {
@@ -168,7 +181,6 @@ public class OpponentsActivity extends BaseActivity {
     }
 
     private void initUsersList() {
-//      checking whether currentOpponentsList is actual, if yes - return
         if (currentOpponentsList != null) {
             ArrayList<QBUser> actualCurrentOpponentsList = dbManager.getAllUsers();
             actualCurrentOpponentsList.remove(sharedPrefsHelper.getQbUser());
