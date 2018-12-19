@@ -6,4 +6,10 @@
         android:layout="@layout/view_for_preference"
         android:selectable="false" />
 
+    <ListPreference
+        android:key="role_preference"
+        android:title="Role"
+        android:entries="@array/pref_roles_array"
+        android:entryValues="@array/pref_roles_array" />
+
 </PreferenceScreen>

@@ -5,18 +5,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.view.View;
 
+import com.core.utils.SharedPrefsHelper;
 import com.familine.fragments.SettingsFragment;
 import com.core.utils.Toaster;
 import com.familine.R;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 /**
  * QuickBlox team
  */
 public class SettingsActivity extends BaseActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-
 
     private static final int MAX_VIDEO_START_BITRATE = 2000;
     private String bitrateStringKey;
@@ -79,6 +84,36 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
             if (startBitrate > MAX_VIDEO_START_BITRATE){
                 Toaster.longToast("Max value is:" + MAX_VIDEO_START_BITRATE);
                 setDefaultstartingBitrate(sharedPreferences);
+            }
+        }
+
+        if (key.equals("role_preference")) {
+            Preference rolePreference = settingsFragment.findPreference(key);
+
+            if (rolePreference instanceof ListPreference) {
+                ListPreference listPref = (ListPreference) rolePreference;
+                String currValue = listPref.getValue();
+                String newExternalId = currValue.equals("Needy") ? "0" : "1";
+
+                QBUser currentUser = SharedPrefsHelper.getInstance().getQbUser();
+                currentUser.setExternalId(newExternalId);
+
+                QBUser user = new QBUser();
+                user.setId(currentUser.getId());
+                user.setExternalId(currentUser.getExternalId());
+
+                QBUsers.updateUser(user).performAsync(new QBEntityCallback<QBUser>() {
+                    @Override
+                    public void onSuccess(QBUser qbUser, Bundle bundle) {
+                        rolePreference.setSummary(listPref.getEntry());
+                        Toaster.shortToast("User role successfully updated");
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        Toaster.shortToast("User role could not be updated");
+                    }
+                });
             }
         }
     }

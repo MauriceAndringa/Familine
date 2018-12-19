@@ -64,6 +64,7 @@
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name="com.familine.activities.SettingsActivity"
+            android:parentActivityName=".activities.OpponentsActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:screenOrientation="portrait" />
 
