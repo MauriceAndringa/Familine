@@ -11,7 +11,10 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.familine.services.CallService;
 import com.familine.utils.Consts;
@@ -35,6 +38,7 @@ public class LoginActivity extends BaseActivity {
 
     private EditText userNameEditText;
     private QBUser userForSave;
+    private String role;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -58,6 +62,22 @@ public class LoginActivity extends BaseActivity {
         setActionBarTitle(R.string.title_login_activity);
         userNameEditText = (EditText) findViewById(R.id.user_name);
         userNameEditText.addTextChangedListener(new LoginEditTextWatcher(userNameEditText));
+
+        Spinner spinner = (Spinner) findViewById(R.id.roles_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.roles_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                role = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
     }
 
     @Override
@@ -71,7 +91,7 @@ public class LoginActivity extends BaseActivity {
 
         switch (item.getItemId()) {
             case R.id.menu_login_user_done:
-                if (isEnteredUserNameValid()) {
+                if (isEnteredUserNameValid() && isSelectedRoleValid()) {
                     hideKeyboard();
                     startSignUpNewUser(createUserWithEnteredData());
                 }
@@ -84,6 +104,10 @@ public class LoginActivity extends BaseActivity {
 
     private boolean isEnteredUserNameValid() {
         return ValidationUtils.isUserNameValid(this, userNameEditText);
+    }
+
+    private boolean isSelectedRoleValid() {
+        return ValidationUtils.isRoleValid(this, role);
     }
 
     private void hideKeyboard() {
@@ -126,6 +150,7 @@ public class LoginActivity extends BaseActivity {
     private void saveUserData(QBUser qbUser) {
         SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
         sharedPrefsHelper.save(Consts.PREF_CURREN_ROOM_NAME, qbUser.getTags().get(0));
+        sharedPrefsHelper.save(Consts.PREF_CURREN_ROOM_NAME, qbUser.getExternalId());
         sharedPrefsHelper.saveQbUser(qbUser);
     }
 
@@ -154,6 +179,9 @@ public class LoginActivity extends BaseActivity {
             qbUser.setLogin(getCurrentDeviceId());
             qbUser.setPassword(Consts.DEFAULT_USER_PASSWORD);
             qbUser.setTags(userTags);
+
+            String externalId = role.equals("Needy") ? "0" : "1";
+            qbUser.setExternalId(externalId);
         }
 
         return qbUser;
@@ -169,7 +197,6 @@ public class LoginActivity extends BaseActivity {
 
             if (isLoginSuccess) {
                 saveUserData(userForSave);
-
                 signInCreatedUser(userForSave, false);
             } else {
                 Toaster.longToast(getString(R.string.login_chat_login_error) + errorMessage);

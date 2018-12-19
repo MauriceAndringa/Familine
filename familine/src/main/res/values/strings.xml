@@ -85,9 +85,15 @@
     <string name="text_status_time_out">Time Out</string>
     <string name="text_status_failed">Failed</string>
 
-    <string name="text_welcoming_message">Please enter username and chat room name. \nYou can join existed chat room.</string>
+    <string name="text_welcoming_message">Please enter a username and select your role.</string>
     <string name="hint_user_name">User name</string>
-    <string name="hint_chat_room_name">Chat room name</string>
+    <string name="hint_role_name">Role name</string>
+
+    <string-array name="roles_array">
+        <item>Select a role</item>
+        <item>Needy</item>
+        <item>Helper</item>
+    </string-array>
 
     <string name="text_select_user_to_call">Tab the user you want to call</string>
 

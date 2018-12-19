@@ -1,5 +1,6 @@
 package com.familine.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.EditText;
 
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
  */
 public class ValidationUtils {
 
+    @SuppressLint("StringFormatMatches")
     private static boolean isEnteredTextValid(Context context, EditText editText, int resFieldName, int maxLength, boolean checkName) {
 
         boolean isCorrect;
@@ -40,7 +42,7 @@ public class ValidationUtils {
         return isEnteredTextValid(context, editText, R.string.field_name_user_name, 20, true);
     }
 
-    public static boolean isRoomNameValid(Context context, EditText editText) {
-        return isEnteredTextValid(context, editText, R.string.field_name_chat_room_name, 15, false);
+    public static boolean isRoleValid(Context context, String role) {
+        return !role.equals("Select a role");
     }
 }

@@ -20,4 +20,10 @@
         android:singleLine="true"
         />
 
+    <Spinner
+        android:id="@+id/roles_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_top_large" />
+
 </LinearLayout>
