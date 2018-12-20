@@ -93,6 +93,7 @@ public class OpponentsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        updateUi();
         initUsersList();
     }
 
@@ -160,6 +161,30 @@ public class OpponentsActivity extends BaseActivity {
         if (userRole == null) return;
 
         if (userRole.equals("0")) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    shareLink();
+                }
+            });
+        } else {
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateUi() {
+        opponentsListView = (ListView) findViewById(R.id.list_opponents);
+        FloatingActionButton fab = findViewById(R.id.fab);
+
+        // Show/hide floating action button based on role
+        String userRole = sharedPrefsHelper.getQbUser().getExternalId();
+        if (userRole == null) return;
+
+        if (userRole.equals("0")) {
+            fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

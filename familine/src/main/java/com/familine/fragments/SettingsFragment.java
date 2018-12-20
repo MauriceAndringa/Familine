@@ -28,9 +28,11 @@ public class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        Preference rolePreference = findPreference("role_preference");
+        Preference rolePreference = findPreference(getString(R.string.pref_roles_key));
         ListPreference listPref = (ListPreference) rolePreference;
-        listPref.setSummary(listPref.getValue());
+        String summary = SharedPrefsHelper.getInstance().getQbUser().getExternalId().equals("0") ? "Helped" : "Helper";
+        listPref.setValue(summary);
+        rolePreference.setSummary(summary);
     }
 
     @Override

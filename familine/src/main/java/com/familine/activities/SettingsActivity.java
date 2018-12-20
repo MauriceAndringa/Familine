@@ -25,6 +25,7 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
 
     private static final int MAX_VIDEO_START_BITRATE = 2000;
     private String bitrateStringKey;
+    private String rolesKey;
     private SettingsFragment settingsFragment;
 
     public static void start(Context context) {
@@ -35,7 +36,6 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initActionBar();
 
         // Display the fragment as the main content.
@@ -43,7 +43,9 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, settingsFragment)
                 .commit();
+
         bitrateStringKey = getString(R.string.pref_startbitratevalue_key);
+        rolesKey = getString(R.string.pref_roles_key);
     }
 
     private void initActionBar() {
@@ -75,7 +77,7 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(bitrateStringKey)) {
             int bitrateValue = sharedPreferences.getInt(bitrateStringKey, Integer.parseInt(
-                    getString(R.string.pref_startbitratevalue_default)));
+                    "0"));
             if (bitrateValue == 0){
                 setDefaultstartingBitrate(sharedPreferences);
                 return;
@@ -87,19 +89,21 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
             }
         }
 
-        if (key.equals("role_preference")) {
+        if (key.equals(rolesKey)) {
             Preference rolePreference = settingsFragment.findPreference(key);
 
             if (rolePreference instanceof ListPreference) {
                 ListPreference listPref = (ListPreference) rolePreference;
                 String currValue = listPref.getValue();
-                String newExternalId = currValue.equals("Needy") ? "0" : "1";
+                String newExternalId = currValue.equals("Helped") ? "0" : "1";
 
                 QBUser currentUser = SharedPrefsHelper.getInstance().getQbUser();
                 currentUser.setExternalId(newExternalId);
+                SharedPrefsHelper.getInstance().saveQbUser(currentUser);
 
                 QBUser user = new QBUser();
                 user.setId(currentUser.getId());
+                user.setTags(currentUser.getTags());
                 user.setExternalId(currentUser.getExternalId());
 
                 QBUsers.updateUser(user).performAsync(new QBEntityCallback<QBUser>() {
@@ -121,7 +125,7 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
     private void setDefaultstartingBitrate(SharedPreferences sharedPreferences){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(bitrateStringKey,
-                Integer.parseInt(getString(R.string.pref_startbitratevalue_default)));
+                Integer.parseInt("0"));
         editor.apply();
         updateSummary(sharedPreferences, bitrateStringKey);
     }

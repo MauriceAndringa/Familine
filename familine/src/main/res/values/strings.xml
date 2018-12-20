@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="current_version">0.1</string>
     <string name="app_name">Familine</string>
     <string name="splash_app_title">Familine</string>
     <string name="splash_create_session_error">Create session errors:</string>
-
 
     <!-- Dialogs strings. -->
     <string name="dlg_signal_error">Disconnected… Please check your Internet connection!</string>
@@ -91,12 +89,12 @@
 
     <string-array name="roles_array">
         <item>Select a role</item>
-        <item>Needy</item>
+        <item>Helped</item>
         <item>Helper</item>
     </string-array>
 
     <string-array name="pref_roles_array">
-        <item>Needy</item>
+        <item>Helped</item>
         <item>Helper</item>
     </string-array>
 
@@ -135,6 +133,8 @@
     <string name="pref_startbitrate_title">Start bitrate setting</string>
     <string name="pref_startbitrate_dlg">Start bitrate setting</string>
     <string name="pref_startbitrate_default">Default</string>
+
+    <string name="pref_roles_key">role_preference</string>
 
     <string name="pref_startbitratevalue_key">startbitratevalue_preference</string>
     <string name="pref_startbitratevalue_title">Bandwidth (0&#8211;2000)</string>

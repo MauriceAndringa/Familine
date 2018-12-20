@@ -29,6 +29,7 @@ import com.core.utils.SharedPrefsHelper;
 import com.core.utils.Toaster;
 import com.familine.R;
 import com.familine.utils.QBEntityCallbackImpl;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import java.util.Random;
 
@@ -179,9 +180,6 @@ public class LoginActivity extends BaseActivity {
             qbUser.setLogin(getCurrentDeviceId());
             qbUser.setPassword(Consts.DEFAULT_USER_PASSWORD);
             qbUser.setTags(userTags);
-
-            String externalId = role.equals("Needy") ? "0" : "1";
-            qbUser.setExternalId(externalId);
         }
 
         return qbUser;
@@ -212,6 +210,23 @@ public class LoginActivity extends BaseActivity {
                 if (deleteCurrentUser) {
                     removeAllUserData(result);
                 } else {
+                    String externalId = role.equals("Helped") ? "0" : "1";
+                    result.setExternalId(externalId);
+                    sharedPrefsHelper.saveQbUser(result);
+
+                    QBUser newUserWithRole = new QBUser();
+                    newUserWithRole.setId(result.getId());
+                    newUserWithRole.setExternalId(result.getExternalId());
+                    newUserWithRole.setTags(result.getTags());
+
+                    QBUsers.updateUser(newUserWithRole).performAsync(new QBEntityCallback<QBUser>() {
+                        @Override
+                        public void onSuccess(QBUser qbUser, Bundle bundle) {}
+
+                        @Override
+                        public void onError(QBResponseException e) {}
+                    });
+
                     startOpponentsActivity();
                 }
             }
