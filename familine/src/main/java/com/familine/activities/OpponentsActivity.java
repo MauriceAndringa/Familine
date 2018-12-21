@@ -300,14 +300,13 @@ public class OpponentsActivity extends BaseActivity {
         SettingsActivity.start(this);
     }
 
+    //Creates the link for adding contacts
     private void shareLink() {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/url");
-
         StringifyArrayList<String> tags = currentUser.getTags();
-        String shareUrl = "https://app.familine.com/?tag=" + tags.get(0);
+        String shareUrl = "Can you help me with my smartphone? if you click on this link I can call you for help! \n https://app.familine.com/?tag=" + tags.get(0);
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
-
         startActivity(Intent.createChooser(sharingIntent, "Invite helper by link"));
     }
 
