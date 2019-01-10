@@ -13,6 +13,19 @@ import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
+/**
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
+ */
+
 public class InviteActivity extends BaseActivity {
     private QBUser currentUser;
 
@@ -46,6 +59,7 @@ public class InviteActivity extends BaseActivity {
         });
     }
 
+    //check if tag exists in tag list
     private boolean userHasTag(QBUser user, String tag) {
         boolean hasTag = false;
         StringifyArrayList<String> tagList = user.getTags();
@@ -60,6 +74,7 @@ public class InviteActivity extends BaseActivity {
         return hasTag;
     }
 
+    //adding tag to user
     private void addUserTag(QBUser user, String newTag) {
         QBUser qbUser = new QBUser();
 

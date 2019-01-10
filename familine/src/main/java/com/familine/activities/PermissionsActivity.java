@@ -12,6 +12,19 @@ import com.familine.utils.PermissionsChecker;
 import com.core.utils.Toaster;
 import com.familine.R;
 
+/**
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
+ */
+
 public class PermissionsActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 0;

@@ -3,8 +3,18 @@ package com.familine.utils;
 import android.Manifest;
 
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public interface Consts {
 
     String QB_CONFIG_FILE_NAME = "qb_config.json";

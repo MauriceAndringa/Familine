@@ -35,8 +35,18 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class IncomeCallFragment extends Fragment implements Serializable, View.OnClickListener {
 
     private static final String TAG = IncomeCallFragment.class.getSimpleName();

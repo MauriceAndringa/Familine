@@ -12,8 +12,18 @@ import com.quickblox.videochat.webrtc.QBRTCMediaConfig;
 import java.util.List;
 
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class SettingsUtil {
 
     private static final String TAG = SettingsUtil.class.getSimpleName();

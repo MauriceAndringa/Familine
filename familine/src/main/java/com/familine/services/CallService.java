@@ -28,8 +28,18 @@ import com.quickblox.videochat.webrtc.QBRTCConfig;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class CallService extends Service {
     private static final String TAG = CallService.class.getSimpleName();
     private QBChatService chatService;

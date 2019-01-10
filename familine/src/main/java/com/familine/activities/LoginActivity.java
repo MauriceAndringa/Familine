@@ -33,6 +33,19 @@ import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import java.util.Random;
 
+/**
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
+ */
+
 public class LoginActivity extends BaseActivity {
 
     private String TAG = LoginActivity.class.getSimpleName();
@@ -59,6 +72,7 @@ public class LoginActivity extends BaseActivity {
         return findViewById(R.id.root_view_login_activity);
     }
 
+    //UI for login
     private void initUI() {
         setActionBarTitle(R.string.title_login_activity);
         userNameEditText = (EditText) findViewById(R.id.user_name);
@@ -103,10 +117,12 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    //check if name has valid characters
     private boolean isEnteredUserNameValid() {
         return ValidationUtils.isUserNameValid(this, userNameEditText);
     }
 
+    //check is role is valid, nothing can go wrong here actually
     private boolean isSelectedRoleValid() {
         return ValidationUtils.isRoleValid(this, role);
     }
@@ -115,6 +131,7 @@ public class LoginActivity extends BaseActivity {
         KeyboardUtils.hideKeyboard(userNameEditText);
     }
 
+    //putting new user in db, needs logintochat result
     private void startSignUpNewUser(final QBUser newUser) {
         showProgressDialog(R.string.dlg_creating_new_user);
         requestExecutor.signUpNewUser(newUser, new QBEntityCallback<QBUser>() {
@@ -143,18 +160,21 @@ public class LoginActivity extends BaseActivity {
         startLoginService(qbUser);
     }
 
+    //if user is created, start this activity
     private void startOpponentsActivity() {
         OpponentsActivity.start(LoginActivity.this, false);
         finish();
     }
 
+    //put form data in qbuser
     private void saveUserData(QBUser qbUser) {
         SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
         sharedPrefsHelper.save(Consts.PREF_CURREN_ROOM_NAME, qbUser.getTags().get(0));
-        sharedPrefsHelper.save(Consts.PREF_CURREN_ROOM_NAME, qbUser.getExternalId());
+        sharedPrefsHelper.save(Consts.PREF_CURREN_ROOM_NAME, qbUser.getCustomData());
         sharedPrefsHelper.saveQbUser(qbUser);
     }
 
+    //create qbuser
     private QBUser createUserWithEnteredData() {
         char[] chars1 = "ABCDEF012GHIJKL345MNOPQR678STUVWXYZ9".toCharArray();
         StringBuilder sb1 = new StringBuilder();
@@ -169,6 +189,7 @@ public class LoginActivity extends BaseActivity {
                 random_string);
     }
 
+    //finalizing qbuser
     private QBUser createQBUserWithCurrentData(String userName, String chatRoomName) {
         QBUser qbUser = null;
         if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(chatRoomName)) {
@@ -211,12 +232,12 @@ public class LoginActivity extends BaseActivity {
                     removeAllUserData(result);
                 } else {
                     String externalId = role.equals("Helped") ? "0" : "1";
-                    result.setExternalId(externalId);
+                    result.setCustomData(externalId);
                     sharedPrefsHelper.saveQbUser(result);
 
                     QBUser newUserWithRole = new QBUser();
                     newUserWithRole.setId(result.getId());
-                    newUserWithRole.setExternalId(result.getExternalId());
+                    newUserWithRole.setCustomData(result.getCustomData());
                     newUserWithRole.setTags(result.getTags());
 
                     QBUsers.updateUser(newUserWithRole).performAsync(new QBEntityCallback<QBUser>() {

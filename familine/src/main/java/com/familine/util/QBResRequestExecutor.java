@@ -11,8 +11,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by tereha on 26.04.16.
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class QBResRequestExecutor {
     private String TAG = QBResRequestExecutor.class.getSimpleName();
 

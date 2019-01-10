@@ -16,6 +16,7 @@ public class SharedPrefsHelper {
     private static final String QB_USER_PASSWORD = "qb_user_password";
     private static final String QB_USER_FULL_NAME = "qb_user_full_name";
     private static final String QB_USER_TAGS = "qb_user_tags";
+    private static final String QB_USER_CUSTOM_DATA = "qb_user_custom_data";
 
     private static SharedPrefsHelper instance;
 
@@ -79,7 +80,8 @@ public class SharedPrefsHelper {
 
     public void saveQbUser(QBUser qbUser) {
         save(QB_USER_ID, qbUser.getId());
-        save(QB_USER_EXTERNAL_ID, qbUser.getExternalId());
+        //save(QB_USER_EXTERNAL_ID, qbUser.getExternalId());
+        save(QB_USER_CUSTOM_DATA, qbUser.getCustomData());
         save(QB_USER_LOGIN, qbUser.getLogin());
         save(QB_USER_PASSWORD, qbUser.getPassword());
         save(QB_USER_FULL_NAME, qbUser.getFullName());
@@ -98,7 +100,8 @@ public class SharedPrefsHelper {
     public QBUser getQbUser() {
         if (hasQbUser()) {
             Integer id = get(QB_USER_ID);
-            String externalId = get(QB_USER_EXTERNAL_ID);
+           // String externalId = get(QB_USER_EXTERNAL_ID);
+            String customData = get(QB_USER_CUSTOM_DATA);
             String login = get(QB_USER_LOGIN);
             String password = get(QB_USER_PASSWORD);
             String fullName = get(QB_USER_FULL_NAME);
@@ -113,7 +116,8 @@ public class SharedPrefsHelper {
 
             QBUser user = new QBUser(login, password);
             user.setId(id);
-            user.setExternalId(externalId);
+           // user.setExternalId(externalId);
+            user.setCustomData(customData);
             user.setFullName(fullName);
             user.setTags(tags);
             return user;

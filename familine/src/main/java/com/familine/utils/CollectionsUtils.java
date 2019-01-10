@@ -7,8 +7,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by tereha on 12.05.16.
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class CollectionsUtils {
 
     public static String makeStringFromUsersFullNames(ArrayList<QBUser> allUsers) {

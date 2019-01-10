@@ -15,8 +15,18 @@ import com.quickblox.users.model.QBUser;
 import java.util.List;
 
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class OpponentsAdapter extends BaseSelectableListAdapter<QBUser> {
 
     private SelectedItemsCountsChangedListener selectedItemsCountChangedListener;

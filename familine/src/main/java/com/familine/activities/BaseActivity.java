@@ -15,8 +15,18 @@ import com.familine.App;
 import com.familine.util.QBResRequestExecutor;
 
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public abstract class BaseActivity extends CoreBaseActivity {
 
     SharedPrefsHelper sharedPrefsHelper;
@@ -37,6 +47,7 @@ public abstract class BaseActivity extends CoreBaseActivity {
         setActionBarTitle(getTitle());
     }
 
+    //showing progress dialog untill hidden by hideProgressDialog()
     void showProgressDialog(@StringRes int messageId) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
@@ -58,12 +69,14 @@ public abstract class BaseActivity extends CoreBaseActivity {
         progressDialog.show();
     }
 
+    //When function/process is done, hide progress dialog
     void hideProgressDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
     }
 
+    //error dialog
     protected void showErrorSnackbar(@StringRes int resId, Exception e,
                                      View.OnClickListener clickListener) {
         if (getSnackbarAnchorView() != null) {

@@ -19,8 +19,18 @@ import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class SettingsActivity extends BaseActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int MAX_VIDEO_START_BITRATE = 2000;
@@ -75,6 +85,7 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        //function to change video quality, might be needed in the future
         if (key.equals(bitrateStringKey)) {
             int bitrateValue = sharedPreferences.getInt(bitrateStringKey, Integer.parseInt(
                     "0"));
@@ -89,6 +100,7 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
             }
         }
 
+        //function to change role of current user
         if (key.equals(rolesKey)) {
             Preference rolePreference = settingsFragment.findPreference(key);
 
@@ -98,13 +110,13 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
                 String newExternalId = currValue.equals("Helped") ? "0" : "1";
 
                 QBUser currentUser = SharedPrefsHelper.getInstance().getQbUser();
-                currentUser.setExternalId(newExternalId);
+                currentUser.setCustomData(newExternalId);
                 SharedPrefsHelper.getInstance().saveQbUser(currentUser);
 
                 QBUser user = new QBUser();
                 user.setId(currentUser.getId());
                 user.setTags(currentUser.getTags());
-                user.setExternalId(currentUser.getExternalId());
+                user.setCustomData(currentUser.getCustomData());
 
                 QBUsers.updateUser(user).performAsync(new QBEntityCallback<QBUser>() {
                     @Override
@@ -122,6 +134,7 @@ public class SettingsActivity extends BaseActivity implements SharedPreferences.
         }
     }
 
+    //setting default bitrate
     private void setDefaultstartingBitrate(SharedPreferences sharedPreferences){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(bitrateStringKey,

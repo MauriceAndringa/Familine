@@ -19,8 +19,18 @@ import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class SettingsFragment extends PreferenceFragment {
 
     @Override
@@ -30,7 +40,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         Preference rolePreference = findPreference(getString(R.string.pref_roles_key));
         ListPreference listPref = (ListPreference) rolePreference;
-        String summary = SharedPrefsHelper.getInstance().getQbUser().getExternalId().equals("0") ? "Helped" : "Helper";
+        String summary = SharedPrefsHelper.getInstance().getQbUser().getCustomData().equals("0") ? "Helped" : "Helper";
         listPref.setValue(summary);
         rolePreference.setSummary(summary);
     }

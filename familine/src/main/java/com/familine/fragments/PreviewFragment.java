@@ -13,6 +13,19 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.core.utils.ResourceUtils;
 import com.familine.R;
 
+/**
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
+ */
+
 public class PreviewFragment extends Fragment{
 
     public static final String PREVIEW_IMAGE = "preview_image";

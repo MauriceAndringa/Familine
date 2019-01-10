@@ -7,8 +7,18 @@ import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionStateCallback;
 import org.webrtc.CameraVideoCapturer;
 
 /**
- * Created by tereha on 23.05.16.
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public interface ConversationFragmentCallbackListener {
 
     void addTCClientConnectionCallback(QBRTCSessionStateCallback clientConnectionCallbacks);

@@ -48,8 +48,18 @@ import java.util.concurrent.TimeUnit;
 import io.fabric.sdk.android.Fabric;
 
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class OpponentsActivity extends BaseActivity {
     private static final String TAG = OpponentsActivity.class.getSimpleName();
 
@@ -72,6 +82,7 @@ public class OpponentsActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    //UI with list of opponents
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +139,7 @@ public class OpponentsActivity extends BaseActivity {
         webRtcSessionManager = WebRtcSessionManager.getInstance(getApplicationContext());
     }
 
+    //load users linked to current user
     private void startLoadUsers() {
         showProgressDialog(R.string.dlg_loading_opponents);
         String currentRoomName = currentUser.getTags().get(0);
@@ -157,7 +169,7 @@ public class OpponentsActivity extends BaseActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
 
         // Show/hide floating action button based on role
-        String userRole = currentUser.getExternalId();
+        String userRole = sharedPrefsHelper.getQbUser().getCustomData();
         if (userRole == null) return;
 
         if (userRole.equals("0")) {
@@ -180,7 +192,8 @@ public class OpponentsActivity extends BaseActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
 
         // Show/hide floating action button based on role
-        String userRole = sharedPrefsHelper.getQbUser().getExternalId();
+        String userRole = sharedPrefsHelper.getQbUser().getCustomData();
+
         if (userRole == null) return;
 
         if (userRole.equals("0")) {

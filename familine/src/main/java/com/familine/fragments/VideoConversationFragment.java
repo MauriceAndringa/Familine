@@ -56,10 +56,19 @@ import java.util.Map;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 
-
 /**
- * QuickBlox team
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
  */
+
 public class VideoConversationFragment extends BaseConversationFragment implements Serializable, QBRTCClientVideoTracksCallbacks<QBRTCSession>,
         QBRTCSessionStateCallback<QBRTCSession>, QBRTCSessionEventsCallback, OpponentsFromCallAdapter.OnAdapterEventListener {
 

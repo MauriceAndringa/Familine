@@ -17,6 +17,20 @@ import com.familine.R;
 
 import java.lang.ref.WeakReference;
 
+/**
+ * Familine Team:
+ *
+ * Andringa,    Maurice
+ * Chen,        Eric
+ * Dons,        Henrik
+ * Vallentgoed, Timon
+ * Verhoek,     Karen
+ *
+ * Original Source : Quickblox
+ * Code is commented by Familine team, Not commented part are self explanatory
+ */
+
+
 public abstract class BaseToolBarFragment extends Fragment {
 
     private static final String TAG = BaseToolBarFragment.class.getSimpleName();
