@@ -98,7 +98,7 @@
         <item>Helper</item>
     </string-array>
 
-    <string name="text_select_user_to_call">Tab the user you want to call</string>
+    <string name="text_select_user_to_call">Tap on the user you want to call</string>
 
     <string name="call_was_stopped_connection_lost">Call was stopped because connection was lost</string>
     <string name="connection_lost">Connection lost</string>
